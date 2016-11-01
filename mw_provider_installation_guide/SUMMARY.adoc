@@ -1,5 +1,0 @@
-= Summary
-
-. link:README.adoc[Introduction]
-. link:topics/overview.adoc[Overview]
-
