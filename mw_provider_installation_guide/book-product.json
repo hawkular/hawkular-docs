@@ -1,0 +1,21 @@
+{
+  "gitbook": "2.x.x",
+  "structure": {
+    "readme": "README.adoc"
+  },
+  "plugins": [
+    "toggle-chapters",
+    "ungrey",
+    "splitter"
+  ],
+  "variables": {
+    "title": "Middleware Provider for CloudForms Installation Guide",
+    "project": {
+      "name": "Middleware Provider for CloudForms",
+      "version": "7.0.0"
+    },
+    "community": false,
+    "product": true,
+    "images": "mwprovider-images",
+  }
+}

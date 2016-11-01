@@ -1,0 +1,12 @@
+<productname>Middleware Provider for CloudForms</productname>
+<productnumber>x.y</productnumber>
+<subtitle>Installation Guide</subtitle>
+<title>Installation Guide</title>
+<release>x.y</release>
+<abstract>
+	    <para>This guide consist of information for administrators to install the Middleware Provider for CloudForms</para>
+    </abstract>
+<authorgroup>
+    <orgname>Red Hat Customer Content Services</orgname>
+</authorgroup>
+<xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

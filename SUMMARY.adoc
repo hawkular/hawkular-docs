@@ -1,0 +1,4 @@
+= {{book.title}}
+
+
+. link:mw_provider_installation_guide/README.adoc[Middleware Provider Installation Guide]

@@ -1,0 +1,9 @@
+
+= Installation Guide
+
+image:images/hawkular_logo_450x450.png[alt="Hawkular"]
+
+{{book.project.name}} {{book.project.version}}
+
+http://www.hwakular.org
+

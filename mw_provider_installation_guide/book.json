@@ -1,0 +1,21 @@
+{
+  "gitbook": "2.x.x",
+  "structure": {
+    "readme": "README.adoc"
+  },
+  "plugins": [
+    "toggle-chapters",
+    "ungrey",
+    "splitter"
+  ],
+  "variables": {
+    "title": "Middleware Provider for ManageIQ",
+    "project": {
+      "name": "Hawkular",
+      "version": "x.y.z"
+    },
+    "community": true,
+    "product": false,
+    "images": "hawkular-images",
+  }
+}

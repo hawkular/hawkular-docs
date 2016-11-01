@@ -1,0 +1,29 @@
+{
+  "gitbook": "2.x.x",
+  "structure": {
+    "readme": "README.adoc"
+  },
+  "plugins": [
+    "toggle-chapters",
+    "ungrey",
+    "splitter",
+    "ga"
+  ],
+  "pluginsConfig": {
+    "ga": {
+      "token": "UA-86673245-1"
+    }
+  },
+
+  "variables": {
+    "title": "Hawkular documentation",
+    "project": {
+      "name": "Hawkular",
+      "version": "SNAPSHOT",
+      "versionMvn": "SNAPSHOT"
+    },
+    "community": true,
+    "product": false,
+    "images": "hawkular-images",
+  }
+}
