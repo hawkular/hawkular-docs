@@ -16,6 +16,6 @@
     },
     "community": true,
     "product": false,
-    "images": "hawkular-images",
+    "images": "hawkular-images"
   }
 }
