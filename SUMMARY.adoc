@@ -1,6 +1,7 @@
-= {{book.title}}
+= Summary
 
-
+. link:README.adoc[Introduction]
 . link:mw_provider_installation_guide/README.adoc[Middleware Provider Installation Guide]
 .. link:mw_provider_installation_guide/topics/overview.adoc[Overview]
+... Test
 
