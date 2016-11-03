@@ -4,6 +4,4 @@ This is another view
 
 * one
 * two
-
-
-
+* Three
