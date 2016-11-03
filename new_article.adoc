@@ -1,3 +1,0 @@
-= New article
-
-* This is how to install Postgres read 
