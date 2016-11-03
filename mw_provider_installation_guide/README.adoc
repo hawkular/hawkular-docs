@@ -7,5 +7,9 @@ image:../images/hawkular_logo_450x450.png[alt="Hawkular"]
 
 Cool ?
 
-http://www.hawkular.org
+* Un
+* Deux
+* Trois
 
+
+http://www.hawkular.org
