@@ -1,7 +1,6 @@
 = Summary
 
 . link:README.adoc[Introduction]
-.. link:new_article.adoc[New article]
 . link:mw_provider_installation_guide/README.adoc[Middleware Provider Installation Guide]
 .. link:mw_provider_installation_guide/topics/overview.adoc[Overview]
 ... link:mw_provider_installation_guide/topics/test.adoc[Test]
