@@ -16,14 +16,14 @@
   },
 
   "variables": {
-    "title": "Hawkular documentation",
+    "title": "Middleware Manager for CloudForms",
     "project": {
-      "name": "Hawkular",
+      "name": "Middleware Manager",
       "version": "SNAPSHOT",
       "versionMvn": "SNAPSHOT"
     },
     "community": true,
     "product": false,
-    "images": "hawkular-images"
+    "images": "mwmanager-images"
   }
 }

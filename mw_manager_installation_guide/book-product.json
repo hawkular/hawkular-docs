@@ -9,13 +9,13 @@
     "splitter"
   ],
   "variables": {
-    "title": "Middleware Provider for CloudForms Installation Guide",
+    "title": "Middleware Manager for CloudForms",
     "project": {
-      "name": "Middleware Provider for CloudForms",
-      "version": "7.0.0"
+      "name": "Middleware Manager",
+      "version": "x.y.z"
     },
-    "community": false,
-    "product": true,
-    "images": "mwprovider-images"
+    "community": true,
+    "product": false,
+    "images": "mwmanager-images"
   }
 }

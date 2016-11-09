@@ -9,13 +9,13 @@
     "splitter"
   ],
   "variables": {
-    "title": "Middleware Provider for ManageIQ",
+    "title": "Middleware Manager for CloudForms",
     "project": {
-      "name": "Hawkular",
+      "name": "Middleware Manager",
       "version": "x.y.z"
     },
     "community": true,
     "product": false,
-    "images": "hawkular-images"
+    "images": "mwmanager-images"
   }
 }

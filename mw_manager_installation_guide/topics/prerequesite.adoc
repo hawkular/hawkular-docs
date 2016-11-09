@@ -22,9 +22,10 @@ To install docker, please run the command:
 sudo yum install docker
 ....
 
-== Installing PosgreSQL Server TODO: version number ?
-To install PostgreSQL on a RHEL machine, make sure to enable the software collection
+== Installing PosgreSQL Server 9.5
+To install PostgreSQL on a RHEL machine, make sure to enable the software collection 2.2
 repository to get the required version of PostgreSQL.
+
 TODO:how
 
 Then install the server with:
