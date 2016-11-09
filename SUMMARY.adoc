@@ -1,6 +1,9 @@
 = Summary
 
 . link:README.adoc[Introduction]
-. link:mw_provider_installation_guide/README.adoc[Middleware Provider Installation Guide]
+. link:mw_provider_installation_guide/README.adoc[Middleware Manager For CloudForms Installation Guide]
 .. link:mw_provider_installation_guide/topics/overview.adoc[Overview]
+.. link:mw_provider_installation_guide/topics/prerequesite.adoc[Prerequesite]
+.. link:mw_provider_installation_guide/topics/base_installation.adoc[Base installation]
 .. link:mw_provider_installation_guide/topics/cluster_setup.adoc[Cluster Setup]
+.. link:mw_provider_installation_guide/topics/adding_provider[Adding a Middleware provider in CloudForms]

@@ -1,0 +1,32 @@
+= Prerequisite
+
+To manage Red Hat Middleware servers with CloudForms, the following pieces are
+required to be properly installed
+
+. Red Hat CloudForms
+. Red Hat Entrerprise Linux with Docker
+. A PostgreSQL Server
+
+== Installing Red Hat CloudForms Server 4.2
+To install Red Hat CloudForms Server, please refer to
+link:https://access.redhat.com/documentation/en/red-hat-cloudforms/[its installation guide]
+
+== Installing Red Hat Enterprise Linux 7.3
+To run the Middleware Manager, a successful installation of RHEL 7.3 is
+required. The machine needs to be registered.
+Please refer to the
+link:https://access.redhat.com/documentation/en/red-hat-enterprise-linux/[Red Hat Enterprise Linux installation guide.]
+
+To install docker, please run the command:
+....
+sudo yum install docker
+....
+
+== Installing PosgreSQL Server TODO: version number ?
+To install PostgreSQL on a RHEL machine, make sure to enable the software collection
+repository to get the required version of PostgreSQL.
+TODO:how
+
+Then install the server with:
+....
+sudo yum install postgresql

@@ -1,3 +1,4 @@
-== Overview
+= Overview
 
-{{book.project.name}} is cool
+This documentation aims at driving the user through the installation procedure
+to manage MW servers with Red Hat CloudForms.

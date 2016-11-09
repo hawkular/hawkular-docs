@@ -1,0 +1,22 @@
+= Installing the Red Hat Middleware Manager
+
+== Installation of Cassandra container
+
+[source, bash]
+----
+docker run  --name cassandra_seed -d -p 7000:7000 -e CASSANDRA_START_RPC=true \
+brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
+----
+
+== Installation of the Middleware Manager server
+
+With this command we will launch our first Cassandra node. Now we can launch our hawkular-service container and tell it to connect to Cassandra
+
+[source, bash]
+----
+docker run --name hawkular-service  -d \
+          -e HAWKULAR_BACKEND=remote   \
+          -e CASSANDRA_NODES=cassandra_seed \
+          -p 8080:8080 -p 8443:8443 -p 9990:9990 \
+          --link cassandra_seed:cassandra_seed pilhuhn/hawkular-services:latest
+----

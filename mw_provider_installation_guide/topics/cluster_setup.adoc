@@ -4,27 +4,6 @@
 
 For this tutorial I'm going to assume that you have RedHat Atomic Host 7.2 and docker installed on your system. In this tutorial we are going to see how we can setup our Cassandra cluster shrink or expand our Cassandra cluster.
 
-== Setup
-
-First of all we need to launch a container of Cassandra..
-
-[source, bash]
-----
-docker run  --name cassandra_seed -d -p 7000:7000 -e CASSANDRA_START_RPC=true \
-brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
-----
-
-With this command we will launch our first Cassandra node. Now we can launch our hawkular-service container and tell it to connect to Cassandra
-
-[source, bash]
-----
-docker run --name hawkular-service  -d \
-          -e HAWKULAR_BACKEND=remote   \
-          -e CASSANDRA_NODES=cassandra_seed \
-          -p 8080:8080 -p 8443:8443 -p 9990:9990 \
-          --link cassandra_seed:cassandra_seed pilhuhn/hawkular-services:latest
-----
-
 == How to expand the cluster
 
 If for some reason we need to expand our cluster to have more than one node, if this is gonna be on the same box we can launch a new container with this command:
@@ -51,7 +30,7 @@ If for some reason you need to remove a node form the cluster, you need to follo
   docker exec -it <container_id> /usr/bin/nodetool decommission
 ----
 You can monitor the progress using `docker exec -it <container_id> /usr/bin/nodetool netstats`
-. 
+.
 
 Once the process finish you can safely delete the container
 
