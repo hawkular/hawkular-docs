@@ -61,4 +61,5 @@ yum install rh-postgresql95
 scl enable rh-postgresql95 bash
 postgresql-setup --initdb
 service rh-postgresql95-postgresql start
+systemctl enable rh-postgresql95-postgresql.service
 ----
