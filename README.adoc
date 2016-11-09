@@ -6,4 +6,3 @@ image:images/hawkular_logo_450x450.svg[alt="Hawkular"]
 {{book.project.name}} {{book.project.version}}
 
 http://www.hawkular.org
-

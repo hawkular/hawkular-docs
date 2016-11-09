@@ -1,11 +1,21 @@
-= Installing the Red Hat Middleware Manager
+  = Installing the Red Hat Middleware Manager
 
 == Installation of Cassandra container
 
 [source, bash]
 ----
-docker run --name mwmanager-cassandra -d -e CASSANDRA_START_RPC=true brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
+docker run --name mwmanager-cassandra -d brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
 ----
+
+NOTE: By default the Cassandra container will create a volume under
+`opt/apache-cassandra/data`.  This container directory will automatically be
+mapped to a unique local directory which can be viewed using
+"docker inspect <container-id>".  The "-v" option can be used to map the
+Cassandra data volume to a specific host directory.
+`docker run --name mwmanager-cassandra -d -e CASSANDRA_START_RPC=true -v /tmp/mydatadir:/opt/apache-cassandra/data:Z
+brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest`
+Note: the "Z" option is necessary on RHEL/Fedora based systems to correctly set the selinux permissions.
+
 
 With this command we are starting our first Cassandra node.
 We can verify that the server is running, with the following command:
@@ -14,26 +24,34 @@ We can verify that the server is running, with the following command:
 docker ps
 ----
 
+.Result
 ----
-CONTAINER ID        IMAGE                                                                         COMMAND                  CREATED             STATUS              PORTS                                                                              NAMES
-34a75ba45be8        brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest   "/docker-entrypoint.s"   44 seconds ago      Up 44 seconds       7001/tcp, 7199/tcp, 9042/tcp, 0.0.0.0:7000->7000/tcp, 9160/tcp
+CONTAINER ID   IMAGE                                                                         COMMAND                  CREATED          STATUS          PORTS                                         NAMES
+34a75ba45be8   brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest   "/docker-entrypoint.s"   44 seconds ago   Up 44 seconds   7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp   mwmanager-cassandra
 ----
 
 We can see the node information with this command:
+[source, bash]
 ----
- docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool info
+docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool info
 ----
 
 == Installation of the Middleware Manager server
 
-Now we can launch our hawkular-service container and tell it to connect to Cassandra
+Now we can launch our Middleware Manager container and tell it to connect to Cassandra (change my_user, my_password and my_postgres_host to the correct values)
 
 [source, bash]
 ----
 docker run --name mwmanager  -d \
           -e HAWKULAR_BACKEND=remote   \
           -e CASSANDRA_NODES=mwmanager-cassandra \
+          -e HAWKULAR_INVENTORY_JDBC_URL=jdbc:postgresql://my_postgres_host:5432/mwmanager
+          -e HAWKULAR_INVENTORY_JDBC_USERNAME=my_user \
+          -e HAWKULAR_INVENTORY_JDBC_PASSWORD=my_password \
           -p 8080:8080 -p 8443:8443 -p 9990:9990 \
           --link=mwmanager-cassandra
           brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/hawkular/hawkular-services:latest
 ----
+
+To verify the setup, we can reach `http:\\my_mwmanager_host:8080`, and after a minute or two, we should see:
+image:../mwmanager-images/homepage.png[alt="Middleware Manager Homepage"]
