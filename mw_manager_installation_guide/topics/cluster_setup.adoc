@@ -1,18 +1,24 @@
-= How to set up Hawkular + Cassandra Cluster
+= Setup Cassandra cluster
 
-== How to expand the cluster
 
-If for some reason we need to expand our cluster to have more than one node, if this is gonna be on the same box we can launch a new container with this command:
+== Adding Nodes
+
+If for some reason the cluster needs to be expanded on the same box, this can be accomplished launching new Cassandra container and make it point to the seed container.
+Make sure to provide a valid seed container so the new node can bootstrap properly.
 
 [source, bash]
 ----
-docker run -d -e CASSANDRA_START_RPC=true pilhuhn/hawkular-services:latest
+docker run -d -e CASSANDRA_SEEDS=cassandra_seed -d \
+              -e CASSANDRA_START_RPC=true  \
+              --link cassandra_seed  \
+              brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
 ----
 
-After launching the container, you can check the status of the node with nodetool.
+Verify the container is launched using `docker ps`, then verify the status of the node, this can be done running the `nodetool` command
+inside the container.
 
 ----
-#  docker exec -it 34a75ba45be8 /opt/apache-cassandra/bin/nodetool status
+#  docker exec -it <container_id /opt/apache-cassandra/bin/nodetool status
 
 Datacenter: datacenter1
 =======================
@@ -23,26 +29,31 @@ UN  172.17.0.2  490.35 KB  256          50.2%             ead3a0ee-b040-4873-8b6
 UN  172.17.0.4  312.28 KB  256          49.8%             8e4a73eb-5545-48e1-9464-ef2728f8852e  rack1
 ----
 
-Once the node is up, you need to execute a cleanup process on the other nodes of the cluster, you can do this operation latter
-Repeat this process for each node you want to add to the cluster.
+Once all nodes appear UP the cleanup process needs to run in each other nodes of the cluster. This operation removes all unnecessary keys
+that don't belong to the node itself. The cleanup operation can be done using nodetool inside each container.
 
 ---
 docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool cleanup
 ---
 
+The cleanup process needs temporary disk space (proportional to the amount of data stored) and is an I/O intensive operation, so it can be postponed to lower usage hours.
 
-== How to shrink the cluster
+This process could be repeated each time wants to add a node to the cluster.
 
-If for some reason you need to remove a node form the cluster, you need to follow the following steps:
+== Remove a node.
 
-. Select a node you want to remove form the cluster, you can see all containers running with `docker ps`
-. Once you selected a node check whether the node is up or down using `nodetool status`
-. You need to run a decommission process, this will assign the ranges the old node was responsible for to other nodes, and replicate the appropriate data.{blank}
+For remove a node from the cluster those are the steps:
+
+. Select a node for be removed form the cluster, the list of nodes can be obtained running `docker ps`
+. Once the node is selected check whether the node is up or down using `nodetool status`
+. Then a decommission process needs to run inside the container,
+ this process will assign the ranges the old node was responsible for to other nodes, and replicate the appropriate data.{blank}
+
 [source, bash]
 ----
   docker exec -it <container_id> /usr/bin/nodetool decommission
 ----
-You can monitor the progress using `docker exec -it <container_id> /usr/bin/nodetool netstats`
+The progress of the process can be monitored using the command: `docker exec -it <container_id> /usr/bin/nodetool netstats`
 .
 
 ----
@@ -53,7 +64,7 @@ Not sending any streams.
 Read Repair Statistics:
 ----
 
-Once the process finish you can safely delete the container
+. Once the process finish the container can be safely deleted.
 
 [source, bash]
 ----
