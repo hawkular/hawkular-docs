@@ -11,8 +11,8 @@ required to be properly installed
 To install Red Hat CloudForms Server, please refer to
 link:https://access.redhat.com/documentation/en/red-hat-cloudforms/[its installation guide]
 
-== Installing Red Hat Enterprise Linux 7.3
-To run the Middleware Manager, a successful installation of RHEL 7.3 is
+== Installing Red Hat Enterprise Linux 7.2 or higher
+To run the Middleware Manager, a successful installation of RHEL 7.2 or higher is
 required. The machine needs to be registered.
 Please refer to the
 link:https://access.redhat.com/documentation/en/red-hat-enterprise-linux/[Red Hat Enterprise Linux installation guide.]
@@ -45,6 +45,9 @@ systemctl enable docker.service
 ----
 
 == Installing PostgreSQL Server 9.5
+Unless you already have a running PostgreSQL 9.5 Server installed, you will need
+to install it.
+
 To install PostgreSQL on a RHEL machine, make sure to enable the software collection 2.2
 repository to get the required version of PostgreSQL.
 
@@ -54,5 +57,8 @@ subscription-manager repos --enable rhel-server-rhscl-7-rpms
 
 Then install the server with:
 ----
-yum install postgresql
+yum install rh-postgresql95
+scl enable rh-postgresql95 bash
+postgresql-setup --initdb
+service rh-postgresql95-postgresql start
 ----
