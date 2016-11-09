@@ -1,1 +1,22 @@
 = Adding a Middleware Provider in Red Hat CloudForms
+
+Now that CloudForms and the Middleware manager has been correctly installed, it
+is time to add the Middlware manager as a CloudForms Middleware Provider.
+
+To do so, go to http://my_cloudforms/ and login with a user who is allowed to
+add providers. The default user is `admin` with `smartvm` for his password.
+
+image:../mwmanager-images/mw_provider_login.png[alt="Login into CloudForms"]
+
+Then go to "Middleware>Configuration>Add a New Middleware Provider"
+
+image:../mwmanager-images/mw_provider_add.png[alt="Add a New Middleware Provider"]
+
+Fill-in the details with the IP address and port of the Middleware manager, the username
+and password used to start the manager then validate.
+
+image:../mwmanager-images/mw_provider_validated.png[alt="Validate data"]
+
+Once validated, press the add button and view the summary for the Middleware provider.
+
+image:../mwmanager-images/mw_provider_summary.png[alt="Validate data"]
