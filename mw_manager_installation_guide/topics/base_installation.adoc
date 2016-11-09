@@ -4,9 +4,9 @@
 
 [source, bash]
 ----
-docker run  --name cassandra_seed -d -p 7000:7000 -e CASSANDRA_START_RPC=true \
-brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
+docker run --name mwmanager-cassandra -d -e CASSANDRA_START_RPC=true brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
 ----
+
 With this command we are starting our first Cassandra node.
 We can verify that the server is running, with the following command:
 [source, bash]
@@ -20,9 +20,9 @@ CONTAINER ID        IMAGE                                                       
 ----
 
 We can see the node information with this command:
-```
+----
  docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool info
-```
+----
 
 == Installation of the Middleware Manager server
 
@@ -30,9 +30,10 @@ Now we can launch our hawkular-service container and tell it to connect to Cassa
 
 [source, bash]
 ----
-docker run --name hawkular-service  -d \
+docker run --name mwmanager  -d \
           -e HAWKULAR_BACKEND=remote   \
-          -e CASSANDRA_NODES=cassandra_seed \
+          -e CASSANDRA_NODES=mwmanager-cassandra \
           -p 8080:8080 -p 8443:8443 -p 9990:9990 \
-          --link cassandra_seed:cassandra_seed pilhuhn/hawkular-services:latest
+          --link=mwmanager-cassandra
+          brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/hawkular/hawkular-services:latest
 ----

@@ -17,17 +17,42 @@ required. The machine needs to be registered.
 Please refer to the
 link:https://access.redhat.com/documentation/en/red-hat-enterprise-linux/[Red Hat Enterprise Linux installation guide.]
 
-To install docker, please run the command:
-....
-sudo yum install docker
-....
+To register and add extra repositories for Docker support:
+[source, bash]
+----
+subscription-manager register --username=<rhnuser> --password=<pwd>
+subscription-manager list --available
+subscription-manager attach --pool=<pool_id>
+subscription-manager repos --enable=rhel-7-server-extras-rpms
+----
 
-== Installing PosgreSQL Server 9.5
+Install docker and needed dependencies:
+[source, bash]
+----
+yum install docker
+----
+
+Start the docker service:
+[source, bash]
+----
+systemctl start docker.service
+----
+
+Enable the docker service:
+[source, bash]
+----
+systemctl enable docker.service
+----
+
+== Installing PostgreSQL Server 9.5
 To install PostgreSQL on a RHEL machine, make sure to enable the software collection 2.2
 repository to get the required version of PostgreSQL.
 
-TODO:how
+----
+subscription-manager repos --enable rhel-server-rhscl-7-rpms
+----
 
 Then install the server with:
-....
-sudo yum install postgresql
+----
+yum install postgresql
+----
