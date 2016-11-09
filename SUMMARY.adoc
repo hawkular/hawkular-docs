@@ -3,6 +3,4 @@
 . link:README.adoc[Introduction]
 . link:mw_provider_installation_guide/README.adoc[Middleware Provider Installation Guide]
 .. link:mw_provider_installation_guide/topics/overview.adoc[Overview]
-.. link:mw_provider_installation_guide/topocs/cluster_setup.adoc[Cluster Setup]
-... link:mw_provider_installation_guide/topics/another_overview.adoc[Another Overview]
-
+.. link:mw_provider_installation_guide/topics/cluster_setup.adoc[Cluster Setup]
