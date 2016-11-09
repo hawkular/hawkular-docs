@@ -1,9 +1,5 @@
 = How to set up Hawkular + Cassandra Cluster
 
-== Requirements.
-
-For this tutorial I'm going to assume that you have RedHat Atomic Host 7.2 and docker installed on your system. In this tutorial we are going to see how we can setup our Cassandra cluster shrink or expand our Cassandra cluster.
-
 == How to expand the cluster
 
 If for some reason we need to expand our cluster to have more than one node, if this is gonna be on the same box we can launch a new container with this command:
@@ -13,10 +9,27 @@ If for some reason we need to expand our cluster to have more than one node, if 
 docker run -d -e CASSANDRA_START_RPC=true pilhuhn/hawkular-services:latest
 ----
 
-After launching the container, you can check the status of the node with nodetool,
+After launching the container, you can check the status of the node with nodetool.
+
+----
+#  docker exec -it 34a75ba45be8 /opt/apache-cassandra/bin/nodetool status
+
+Datacenter: datacenter1
+=======================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load       Tokens       Owns (effective)  Host ID                               Rack
+UN  172.17.0.2  490.35 KB  256          50.2%             ead3a0ee-b040-4873-8b62-aa700d02b0c1  rack1
+UN  172.17.0.4  312.28 KB  256          49.8%             8e4a73eb-5545-48e1-9464-ef2728f8852e  rack1
+----
 
 Once the node is up, you need to execute a cleanup process on the other nodes of the cluster, you can do this operation latter
 Repeat this process for each node you want to add to the cluster.
+
+---
+docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool cleanup
+---
+
 
 == How to shrink the cluster
 
@@ -32,10 +45,24 @@ If for some reason you need to remove a node form the cluster, you need to follo
 You can monitor the progress using `docker exec -it <container_id> /usr/bin/nodetool netstats`
 .
 
+----
+docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool netstats
+
+Mode: DECOMMISSIONED
+Not sending any streams.
+Read Repair Statistics:
+----
+
 Once the process finish you can safely delete the container
 
 [source, bash]
 ----
-  docker stop <container_id>
-  docker rm <container_id>
+docker stop <container_id>
+docker rm <container_id>
+----
+
+or
+
+----
+docker rm --force  <container_id>
 ----
