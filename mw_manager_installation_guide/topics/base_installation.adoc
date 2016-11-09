@@ -1,4 +1,4 @@
-  = Installing the Red Hat Middleware Manager
+= Installing the Red Hat Middleware Manager
 
 == Installation of Cassandra container
 
