@@ -51,15 +51,61 @@ to install it.
 To install PostgreSQL on a RHEL machine, make sure to enable the software collection 2.2
 repository to get the required version of PostgreSQL.
 
+[source, bash]
 ----
 subscription-manager repos --enable rhel-server-rhscl-7-rpms
 ----
 
 Then install the server with:
+[source, bash]
 ----
 yum install rh-postgresql95
 scl enable rh-postgresql95 bash
 postgresql-setup --initdb
 service rh-postgresql95-postgresql start
 systemctl enable rh-postgresql95-postgresql.service
+----
+
+Open the firewall for PostgreSQL remote connections:
+----
+sudo firewall-cmd --permanent --add-port=5432/tcp
+sudo firewall-cmd --add-port=5432/tcp
+----
+
+Edit `/var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf` to allow remote connections.  Add the following line:
+
+.postgresql.conf
+----
+listen_addresses = '*'
+----
+
+Edit /var/lib/pgsql/data/pg_hba.conf to allow a user to connect to the `mwmanager` database.  Add the following line:
+
+Replace `my_user` with the value of your choice
+.pg_hba.conf
+----
+host   mwmanager   my_user   0.0.0.0/0   md5
+----
+Then restart PostgreSQL
+[source, bash]
+----
+systemctl restart rh-postgresql95-postgresql.service
+----
+
+Create the `mwmanager` database:
+----
+su postgres
+systemctl enable rh-postgresql95-postgresql.service
+psql
+----
+
+Replace `my_user` with the value chosen in pg_hba.conf and `my_password` with the value of your choice:
+----
+postgres=# CREATE USER my_user WITH PASSWORD 'my_password';
+postgres=# CREATE DATABASE mwmanager OWNER my_user;
+----
+
+To verify, you can try to connect to the postgresql server remotely with:
+----
+psql -h <my-postgresql-server> -U my_user -W -d mwmanager
 ----
