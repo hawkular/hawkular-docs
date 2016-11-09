@@ -53,5 +53,20 @@ docker run --name mwmanager  -d \
           brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/hawkular/hawkular-services:latest
 ----
 
+.Docker container options
+|=======
+|Name|Default|Description
+|ADD_HAWKULAR_USER|true|Whether to add a user to hawkular before the server starts
+|HAWKULAR_USERNAME|jdoe|Username for the new user
+|HAWKULAR_PASSWORD|password|Password for the new user
+|CASSANDRA_NODES|myCassandra|The hostname or IP of Cassandra
+|HAWKULAR_METRICS_TTL|14|
+|DB_TIMEOUT|-|If set, will wait for specified number of seconds for Cassandra to start before starting Hawkular
+|HAWKULAR_INVENTORY_JDBC_URL|-|For example, jdbc:postgresql://my_postgres_host:5432/mwprovider
+|HAWKULAR_INVENTORY_JDBC_USERNAME|-|PostgreSQL username
+|HAWKULAR_INVENTORY_JDBC_PASSWORD|-|PostgreSQL password
+|=======
+
+
 To verify the setup, we can reach `http:\\my_mwmanager_host:8080`, and after a minute or two, we should see:
 image:../mwmanager-images/homepage.png[alt="Middleware Manager Homepage"]
