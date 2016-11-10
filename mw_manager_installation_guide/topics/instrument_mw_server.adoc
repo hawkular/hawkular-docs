@@ -1,4 +1,4 @@
-= Instrument an Enterprise Application Server 7 server
+= Instrument Enterprise Application Server 7
 
 To instrument an EAP server and be able to monitor and manage it from CloudForms,
 we first need to embed an agent within the server.
