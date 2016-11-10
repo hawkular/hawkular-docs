@@ -3,7 +3,7 @@
 Now that CloudForms and the Middleware manager has been correctly installed, it
 is time to add the Middlware manager as a CloudForms Middleware Provider.
 
-To do so, go to http://my_cloudforms/ and login with a user who is allowed to
+To do so, go to http://my_cfme_host/ and login with a user who is allowed to
 add providers. The default user is `admin` with `smartvm` for his password.
 
 image:../mwmanager-images/mw_provider_login.png[alt="Login into CloudForms"]
