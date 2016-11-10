@@ -38,16 +38,19 @@ docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool info
 
 == Installation of the Middleware Manager server
 
-Now we can launch our Middleware Manager container and tell it to connect to Cassandra (change my_user, my_password and my_postgres_host to the correct values)
+Now we can launch our Middleware Manager container and tell it to connect to Cassandra (change my_db_username, my_db_password and my_db_host to the values
+used when you configure PostgreSQL, and set a new combination of username/password for HAWKULAR_USERNAME and HAWKULAR_PASSWORD)
 
 [source, bash]
 ----
 docker run --name mwmanager  -d \
           -e HAWKULAR_BACKEND=remote   \
           -e CASSANDRA_NODES=mwmanager-cassandra \
-          -e HAWKULAR_INVENTORY_JDBC_URL=jdbc:postgresql://my_postgres_host:5432/mwmanager
-          -e HAWKULAR_INVENTORY_JDBC_USERNAME=my_user \
-          -e HAWKULAR_INVENTORY_JDBC_PASSWORD=my_password \
+          -e HAWKULAR_INVENTORY_JDBC_URL=jdbc:postgresql://my_db_host:5432/mwmanager
+          -e HAWKULAR_INVENTORY_JDBC_USERNAME=my_db_username \
+          -e HAWKULAR_INVENTORY_JDBC_PASSWORD=my_db_password \
+          -e HAWKULAR_USERNAME=my_mwmanager_user \
+          -e HAWKULAR_PASSWORD=my_mwmanager_password \
           -p 8080:8080 -p 8443:8443 -p 9990:9990 \
           --link=mwmanager-cassandra
           brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/hawkular/hawkular-services:latest
@@ -62,7 +65,7 @@ docker run --name mwmanager  -d \
 |CASSANDRA_NODES|myCassandra|The hostname or IP of Cassandra
 |HAWKULAR_METRICS_TTL|14|
 |DB_TIMEOUT|-|If set, will wait for specified number of seconds for Cassandra to start before starting Hawkular
-|HAWKULAR_INVENTORY_JDBC_URL|-|For example, jdbc:postgresql://my_postgres_host:5432/mwprovider
+|HAWKULAR_INVENTORY_JDBC_URL|-|For example, jdbc:postgresql://my_db_host:5432/mwprovider
 |HAWKULAR_INVENTORY_JDBC_USERNAME|-|PostgreSQL username
 |HAWKULAR_INVENTORY_JDBC_PASSWORD|-|PostgreSQL password
 |=======

@@ -81,10 +81,10 @@ listen_addresses = '*'
 
 Edit /var/lib/pgsql/data/pg_hba.conf to allow a user to connect to the `mwmanager` database.  Add the following line:
 
-Replace `my_user` with the value of your choice
+Replace `my_db_username` with the value of your choice
 .pg_hba.conf
 ----
-host   mwmanager   my_user   0.0.0.0/0   md5
+host   mwmanager   my_db_username   0.0.0.0/0   md5
 ----
 Then restart PostgreSQL
 [source, bash]
@@ -99,13 +99,13 @@ systemctl enable rh-postgresql95-postgresql.service
 psql
 ----
 
-Replace `my_user` with the value chosen in pg_hba.conf and `my_password` with the value of your choice:
+Replace `my_db_username` with the value chosen in pg_hba.conf and `my_db_password` with the value of your choice:
 ----
-postgres=# CREATE USER my_user WITH PASSWORD 'my_password';
-postgres=# CREATE DATABASE mwmanager OWNER my_user;
+postgres=# CREATE USER my_db_username WITH PASSWORD 'my_db_password';
+postgres=# CREATE DATABASE mwmanager OWNER my_db_username;
 ----
 
 To verify, you can try to connect to the postgresql server remotely with:
 ----
-psql -h <my-postgresql-server> -U my_user -W -d mwmanager
+psql -h my_db_host -U my_db_username -W -d mwmanager
 ----
