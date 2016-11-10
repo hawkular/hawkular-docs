@@ -4,7 +4,7 @@ To instrument an EAP server and be able to monitor and manage it from CloudForms
 we first need to embed an agent within the server.
 
 The EAP agent installer is available within the Middleware manager. We need to access
-`http://my_mwmanager:8080/`, click on the link "EAP Agent Installer" then
+`http://my_mwmanager_host:8080/`, click on the link "EAP Agent Installer" then
 enter the credentials for the Middleware Manager:
 image:../mwmanager-images/homepage.png[alt="Middleware Manager Homepage"]
 
