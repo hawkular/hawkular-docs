@@ -13,7 +13,7 @@ Then go to "Middleware>Configuration>Add a New Middleware Provider"
 image:../mwmanager-images/mw_provider_add.png[alt="Add a New Middleware Provider"]
 
 Fill-in the details with the IP address and port of the Middleware manager, the username
-and password used to start the manager then validate.
+and password used to start the Middleware manager then validate (my_mwmanager_username and my_mwmanager_password)
 
 image:../mwmanager-images/mw_provider_validated.png[alt="Validate data"]
 
