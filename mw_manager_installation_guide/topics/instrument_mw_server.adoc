@@ -1,5 +1,7 @@
 = Instrument an Enterprise Application Platform 7 server
 
+== Download the agent installer
+
 To instrument an EAP server and be able to monitor and manage it from CloudForms,
 we first need to embed an agent within the server.
 
@@ -11,7 +13,12 @@ image:../mwmanager-images/homepage.png[alt="Middleware Manager Homepage"]
 It will download a file name `hawkular-wildfly-agent-installer.jar` that we need
 to copy on the same host as the EAP server that we want to instrument.
 
-Once downloaded we run the following command to install the embedded agent:
+== Install the agent in Enterprise Application Platform
+
+Once downloaded we run the following command to install the embedded agent, in
+standalone and/or domain mode depending on how EAP is expected to run.
+
+=== Standalone mode
 
 [source, bash]
 ----
@@ -22,6 +29,18 @@ java -jar ~Downloads/hawkular-wildfly-agent-installer.jar
    --password=my_mwmanager_password
 ----
 
+=== Domain mode
+[source, bash]
+----
+java -jar ~Downloads/hawkular-wildfly-agent-installer.jar
+   --target-location=/opt/jboss-eap-7.0/
+   --target-config=/opt/jboss-eap-7.0/domain/configuration/host.xml
+   --server-url=http://192.168.1.123:8080
+   --username=my_mwmanager_username
+   --password=my_mwmanager_password
+----
+
+== Verify in CLoudForms
 Once installed, start or restart EAP, then access the Middleware Provider that was
 already configured in CloudForms.
 
