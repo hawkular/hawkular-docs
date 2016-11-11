@@ -40,7 +40,7 @@ java -jar ~Downloads/hawkular-wildfly-agent-installer.jar
    --password=my_mwmanager_password
 ----
 
-== Verify in CLoudForms
+== Verify in CloudForms
 Once installed, start or restart EAP, then access the Middleware Provider that was
 already configured in CloudForms.
 
