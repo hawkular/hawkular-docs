@@ -8,7 +8,6 @@ Make sure to provide a valid seed container so the new node can bootstrap proper
 [source, bash]
 ----
 docker run -d -e CASSANDRA_SEEDS=mwmanager-cassandra -d \
-              -e CASSANDRA_START_RPC=true  \
               --link mwmanager-cassandra  \
               brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
 ----
@@ -35,9 +34,10 @@ Once all nodes appear UP the cleanup process needs to run in each other nodes of
 docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool cleanup
 ----
 
-The cleanup process needs temporary disk space (proportional to the amount of data stored) and is an I/O intensive operation, so it can be postponed to lower usage hours.
+The cleanup process needs temporary disk space (proportional to the amount of data stored)
+and is an I/O intensive operation, so it should be postponed to lower usage hours.
 
-This process could be repeated each time wants to add a node to the cluster.
+This process would be repeated each time we want to add a new node to the cluster.
 
 == Remove a node.
 
@@ -45,14 +45,16 @@ For remove a node from the cluster those are the steps:
 
 . Select a node for be removed form the cluster, the list of nodes can be obtained running `docker ps`
 . Once the node is selected check whether the node is up or down using `nodetool status`
-. Then a decommission process needs to run inside the container, this process will assign the ranges the old node was responsible for to other nodes, and replicate the appropriate data.{blank}
+. Then a decommission process needs to run inside the container,
+
+This process will move data to the other nodes, and replicate the appropriate data.
 
 [source, bash]
 ----
-  docker exec -it <container_id> /usr/bin/nodetool decommission
+  docker exec -it my_container_id /usr/bin/nodetool decommission
 ----
-The progress of the process can be monitored using the command: `docker exec -it <container_id> /usr/bin/nodetool netstats`
-.
+
+The progress of the process can be monitored using the command:
 [source, bash]
 ----
 docker exec -it <container_id> /opt/apache-cassandra/bin/nodetool netstats
@@ -63,24 +65,24 @@ Not sending any streams.
 Read Repair Statistics:
 ----
 
-. Once the process finish the container can be safely deleted.
+Once the process finish the container can be safely deleted.
 
 [source, bash]
 ----
-docker stop <container_id>
-docker rm <container_id>
+docker stop my_container_id
+docker rm my_container_id
 ----
 
 or
 
 ----
-docker rm --force  <container_id>
+docker rm --force my_container_id
 ----
 
 
 == Replace a node
 
-There are sometimes when something can be wrong with one node, in that case is desirable to have a way to replace it with a new node.
+If something goes wrong with one node, we want to replace it with a new one.
 In order to accomplish that, we need to follow the following steps:
 
 . Get the status of the cluster using nodetool status
@@ -98,7 +100,7 @@ UN  172.17.0.4  83.71 KiB  256          69.0%             fe1e6949-1fc7-496a-a57
 ----
 
 . See if some node is dead, if there is a dead node get the IP address of that node.
-. Starting a new node container using the following command:
+. Start a new node container using the following command:
 [source, bash]
 ----
 docker run -d -e JVM_OPTS="-Dcassandra.replace_address=<node_replaced_ip>" \
@@ -108,7 +110,7 @@ docker run -d -e JVM_OPTS="-Dcassandra.replace_address=<node_replaced_ip>" \
            brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
 
 ----
-Where _node_replaced_ip_ is the IP of the node wants to be replaced. (see step 2)
+Where `node_replaced_ip` is the IP of the node we want to replace. (see step 2)
 
 . run nodetool status again to see if the node was replaced.
 . once the new node finish the bootstrap process we need to wait 72 hours for remove the old node.
