@@ -113,4 +113,4 @@ docker run -d -e JVM_OPTS="-Dcassandra.replace_address=<node_replaced_ip>" \
 Where `node_replaced_ip` is the IP of the node we want to replace. (see step 2)
 
 . run nodetool status again to see if the node was replaced.
-. once the new node finish the bootstrap process we need to wait 72 hours for remove the old node.
+. once the new node finish the bootstrap process the old node can be removed.
