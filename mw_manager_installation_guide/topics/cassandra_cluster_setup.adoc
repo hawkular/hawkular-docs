@@ -9,7 +9,7 @@ Make sure to provide a valid seed container so the new node can bootstrap proper
 ----
 docker run -d -e CASSANDRA_SEEDS=mwmanager-cassandra -d \
               --link mwmanager-cassandra  \
-              brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
+              brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest
 ----
 
 Verify the container is launched using `docker ps`, then verify the status of the node, this can be done running the `nodetool` command
@@ -107,7 +107,7 @@ docker run -d -e JVM_OPTS="-Dcassandra.replace_address=<node_replaced_ip>" \
            -e CASSANDRA_SEEDS=mwmanager-cassandra\
            -e CASSANDRA_START_RPC=true \
            --link mwmanager-cassandra \
-           brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
+           brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest
 
 ----
 Where `node_replaced_ip` is the IP of the node we want to replace. (see step 2)
