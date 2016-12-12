@@ -4,7 +4,7 @@
 
 [source, bash]
 ----
-docker run --name mwmanager-cassandra -d brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest
+docker run --name mwmanager-cassandra -d brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest
 ----
 
 NOTE: By default the Cassandra container will create a volume under
@@ -13,7 +13,7 @@ mapped to a unique local directory which can be viewed using
 "docker inspect <container-id>".  The "-v" option can be used to map the
 Cassandra data volume to a specific host directory.
 `docker run --name mwmanager-cassandra -d -e CASSANDRA_START_RPC=true -v /tmp/mydatadir:/opt/apache-cassandra/data:Z
-brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest`
+brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest`
 Note: the "Z" option is necessary on RHEL/Fedora based systems to correctly set the selinux permissions.
 
 
@@ -27,7 +27,7 @@ docker ps
 .Result
 ----
 CONTAINER ID   IMAGE                                                                         COMMAND                  CREATED          STATUS          PORTS                                         NAMES
-34a75ba45be8   brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss/cassandra:latest   "/docker-entrypoint.s"   44 seconds ago   Up 44 seconds   7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp   mwmanager-cassandra
+34a75ba45be8   brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest   "/docker-entrypoint.s"   44 seconds ago   Up 44 seconds   7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp   mwmanager-cassandra
 ----
 
 We can see the node information with this command:
@@ -53,7 +53,7 @@ docker run --name mwmanager  -d \
           -e HAWKULAR_PASSWORD=my_mwmanager_password \
           -p 8080:8080 -p 8443:8443 -p 9990:9990 \
           --link=mwmanager-cassandra
-          brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/hawkular/hawkular-services:latest
+          brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager:latest
 ----
 
 .Docker container options
