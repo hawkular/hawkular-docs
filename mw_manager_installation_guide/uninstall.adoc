@@ -6,7 +6,9 @@ Uninstalling the Middleware Manager consists of several steps:
 . Remove all agents from monitored EAPs
 . Delete the Middleware provider container
 . Delete the Cassandra container(s)
-. Delete the data
+. Delete the metrics data
+. Delete the inventory data
+
 == Remove the Middleware provider from CloudForms
 
 Navigate to the Middleware Provider then select `Configuration>Remove Middleware Provider`
@@ -29,9 +31,30 @@ docker rm mwmanager-cassandra
 ----
 You will need to execute the command for all the Cassandra nodes that you may have started.
 
-== Delete the data
+== Delete the metrics data
+
+WARNING: This operation is irreversible, all the metrics will be permanently deleted.
+
 If you used the defaults setting, all the data should be stored in `/opt/apache-cassandra/data`.
 Once all the containers are stopped and deleted, the folder can also be deleted:
 ----
 rm -rf /opt/apache-cassandra/data
 ----
+
+== Delete the inventory data
+
+To properly delete the inventory data, you'll need to delete the database and the user that you may have created for this purpose.
+
+First you will need to connect to the PostgreSQL database
+----
+su postgres
+systemctl enable rh-postgresql95-postgresql.service
+psql
+----
+
+Then execute the following commands
+----
+postgres=# DROP DATABASE mwmanager 
+postgres=# DROP USER my_db_username
+----
+
