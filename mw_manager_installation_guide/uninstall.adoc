@@ -1,0 +1,37 @@
+= Uninstalling the Middleware Manager
+
+Uninstalling the Middleware Manager consists of several steps:
+
+. Remove the Middleware provider from CloudForms
+. Remove all agents from monitored EAPs
+. Delete the Middleware provider container
+. Delete the Cassandra container(s)
+. Delete the data
+== Remove the Middleware provider from CloudForms
+
+Navigate to the Middleware Provider then select `Configuration>Remove Middleware Provider`
+
+== Remove all agents from monitored EAPs
+
+<<>>
+
+== Delete the Middleware provider container
+
+Make sure how the middleware provider container is named with `docker ps` command then execute:
+----
+docker rm mwmanager
+----
+
+== Delete the Cassandra containers
+Make sure how the cassandra container is named with `docker ps` command then execute:
+----
+docker rm mwmanager-cassandra
+----
+You will need to execute the command for all the Cassandra nodes that you may have started.
+
+== Delete the data
+If you used the defaults setting, all the data should be stored in `/opt/apache-cassandra/data`.
+Once all the containers are stopped and deleted, the folder can also be deleted:
+----
+rm -rf /opt/apache-cassandra/data
+----

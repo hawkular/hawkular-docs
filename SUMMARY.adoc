@@ -8,4 +8,5 @@
 .. link:mw_manager_installation_guide/topics/adding_provider.adoc[Adding a Middleware provider in CloudForms]
 .. link:mw_manager_installation_guide/topics/instrument_mw_server.adoc[Instrument an EAP server]
 .. link:mw_manager_installation_guide/topics/cassandra_cluster_setup.adoc[Cassandra Cluster Setup]
+.. link:mw_manager_installation_guide/uninstall.adoc[Uninstall]
 
