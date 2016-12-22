@@ -15,7 +15,23 @@ Navigate to the Middleware Provider then select `Configuration>Remove Middleware
 
 == Remove all agents from monitored EAPs
 
-<<>>
+For each EAP server (assuming installed in /opt/jboss-eap-7.0):
+
+. Run the server in --admin-only mode:
++
+----
+/opt/jboss-eap-7.0/bin/standalone.sh --admin-only
+----
+. Remove the agent subsystem, the agent extension, and the socket binding that points to the Hawkular Server:
++
+----
+/opt/jboss-eap-7.0/jboss-cli.sh --connect --commands=/subsystem=hawkular-wildfly-agent/:remove,/extension=org.hawkular.agent/:remove,/socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=hawkular/:remove
+----
+. Remove the agent binaries:
++
+----
+rm -rf /opt/jboss-eap-7.0/modules/system/add-ons/hawkular-agent
+----
 
 == Delete the Middleware provider container
 
