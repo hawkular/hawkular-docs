@@ -46,13 +46,13 @@ used when you configure PostgreSQL, and set a new combination of username/passwo
 docker run --name mwmanager  -d \
           -e HAWKULAR_BACKEND=remote   \
           -e CASSANDRA_NODES=mwmanager-cassandra \
-          -e HAWKULAR_INVENTORY_JDBC_URL=jdbc:postgresql://my_db_host:5432/mwmanager
+          -e HAWKULAR_INVENTORY_JDBC_URL=jdbc:postgresql://my_db_host:5432/mwmanager \
           -e HAWKULAR_INVENTORY_JDBC_USERNAME=my_db_username \
           -e HAWKULAR_INVENTORY_JDBC_PASSWORD=my_db_password \
           -e HAWKULAR_USERNAME=my_mwmanager_username \
           -e HAWKULAR_PASSWORD=my_mwmanager_password \
           -p 8080:8080 -p 8443:8443 -p 9990:9990 \
-          --link=mwmanager-cassandra
+          --link=mwmanager-cassandra \
           brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager:latest
 ----
 
