@@ -37,13 +37,13 @@ rm -rf /opt/jboss-eap-7.0/modules/system/add-ons/hawkular-agent
 
 Make sure how the middleware provider container is named with `docker ps` command then execute:
 ----
-docker rm mwmanager
+docker rm -f mwmanager
 ----
 
 == Delete the Cassandra containers
 Make sure how the cassandra container is named with `docker ps` command then execute:
 ----
-docker rm mwmanager-cassandra
+docker rm -f mwmanager-cassandra
 ----
 You will need to execute the command for all the Cassandra nodes that you may have started.
 
@@ -73,4 +73,3 @@ Then execute the following commands
 postgres=# DROP DATABASE mwmanager 
 postgres=# DROP USER my_db_username
 ----
-
