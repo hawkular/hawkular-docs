@@ -71,5 +71,5 @@ docker run --name mwmanager  -d \
 |=======
 
 
-To verify the setup, we can reach `http:\\my_mwmanager_host:8080`, and after a minute or two, we should see:
+To verify the setup, we can reach `http://my_mwmanager_host:8080`, and after a minute or two, we should see:
 image:../mwmanager-images/homepage.png[alt="Middleware Manager Homepage"]
