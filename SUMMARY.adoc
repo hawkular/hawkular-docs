@@ -10,4 +10,10 @@
 .. link:mw_manager_installation_guide/topics/cassandra_cluster_setup.adoc[Cassandra Cluster Setup]
 .. link:mw_manager_installation_guide/topics/uninstall.adoc[Uninstall]
 . link:mw_manager_developer_guide/README.adoc[Middleware Manager for CloudForms Developer Guide]
+.. link:mw_manager_developer_guide/topics/overview.adoc[Overview]
+.. link:mw_manager_developer_guide/topics/agent.adoc[Writing an agent]
+.. link:mw_manager_developer_guide/topics/manageiq.adoc[Writing the integration in ManageIQ]
+
+
+
 
