@@ -2,7 +2,7 @@
 
 == Adding Nodes
 
-If for some reason the cluster needs to be expanded on the same box, this can be accomplished launching new Cassandra container and make it point to the seed container.
+If for some reason the cluster needs to be expanded on the same host, this can be accomplished launching new Cassandra container and make it point to the seed container.
 Make sure to provide a valid seed container so the new node can bootstrap properly.
 
 [source, bash]
@@ -11,6 +11,9 @@ docker run -d -e CASSANDRA_SEEDS=mwmanager-cassandra -d \
               --link mwmanager-cassandra  \
               brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest
 ----
+NOTE: if the cluster needs to run on a separate host, the option -e CASSANDRA_BROADCAST_ADDRESS=<public-ip> must be specified on each node
+that is launched, where <public-ip> is the IP of the machine on the network, is not possible to combine the approach of having
+multiple nodes on the same host and nodes on a remote host for one cluster.
 
 Verify the container is launched using `docker ps`, then verify the status of the node, this can be done running the `nodetool` command
 inside the container.
@@ -53,6 +56,9 @@ This process will move data to the other nodes, and replicate the appropriate da
 ----
   docker exec -it my_container_id /usr/bin/nodetool decommission
 ----
+
+NOTE: If the node is running on another machine, you need to execute the above command on that machine.
+
 
 The progress of the process can be monitored using the command:
 [source, bash]
@@ -110,6 +116,10 @@ docker run -d -e JVM_OPTS="-Dcassandra.replace_address=<node_replaced_ip>" \
            brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest
 
 ----
+
+NOTE: If the node is running on another machine, you need to execute the above command on that host and must be specify
+the option -e CASSANDRA_BROADCAST_ADDRESS=<public-ip>
+
 Where `node_replaced_ip` is the IP of the node we want to replace. (see step 2)
 
 . run nodetool status again to see if the node was replaced.
