@@ -1,0 +1,12 @@
+= Agent
+
+In general, Hawkular is a push model. A resource or agent push metrics to Hawkular Services at regular or irregular intervals. 
+Agents may be embedded in the resource or not. For WildFly, the choice was made to have a agent in the form of a subsystem.
+
+== WildFly based projects
+
+TODO: Instructions on how to use the WildFly agent to register the resource, expose metrics and operations. Wildfly layering requirements (such as declaring the product name correctly...)
+
+== Non WildFly based projects
+
+TODO: Instructions for non-Wildfly based agent. What API to use, what tags/structure to use...

@@ -1,3 +1,3 @@
-= Middleware Manager Developer Guide
+adding-middleware-servers-to-manageiq= Middleware Manager Developer Guide
 
 {{book.project.name}} {{book.project.version}}
