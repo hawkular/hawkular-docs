@@ -1,4 +1,4 @@
-ManageIQ= Overview
+= Overview
 
 This documentation is designed for contributors to Hawkular Services and the Middleware Provider of ManageIQ/CloudForms.
 
