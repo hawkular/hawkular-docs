@@ -9,4 +9,5 @@
 .. link:mw_manager_installation_guide/topics/instrument_mw_server.adoc[Instrument an EAP server]
 .. link:mw_manager_installation_guide/topics/cassandra_cluster_setup.adoc[Cassandra Cluster Setup]
 .. link:mw_manager_installation_guide/topics/uninstall.adoc[Uninstall]
+. link:adding-middleware-servers-to-manageiq.adoc[Adding Middleware servers to ManageIQ]
 

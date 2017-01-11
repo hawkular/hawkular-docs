@@ -1,0 +1,3 @@
+= Middleware Manager Developer Guide
+
+{{book.project.name}} {{book.project.version}}
