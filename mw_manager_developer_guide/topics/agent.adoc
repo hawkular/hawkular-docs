@@ -3,10 +3,40 @@
 In general, Hawkular is a push model. A resource or agent push metrics to Hawkular Services at regular or irregular intervals. 
 Agents may be embedded in the resource or not. For WildFly, the choice was made to have a agent in the form of a subsystem.
 
+To execute and test the agent, Hawkular Services will need to be 
+
 == WildFly based projects
 
 TODO: Instructions on how to use the WildFly agent to register the resource, expose metrics and operations. Wildfly layering requirements (such as declaring the product name correctly...)
 
+=== Registering the server in Hawkular Inventory
+
+TODO
+
+=== Add Metrics to Hawkular Metrics
+
+TODO
+
+=== Expose operations to Hawkular Services
+
+TODO
+
 == Non WildFly based projects
 
 TODO: Instructions for non-Wildfly based agent. What API to use, what tags/structure to use...
+
+=== Registering the server in Hawkular Inventory
+
+TODO
+
+=== Add Metrics to Hawkular Metrics
+
+TODO
+
+=== Expose operations to Hawkular Services
+
+TODO
+
+== How to test/verify
+
+TODO
