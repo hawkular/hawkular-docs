@@ -2,4 +2,12 @@
 
 This documentation is designed for contributors to Hawkular Services and the Middleware Provider of ManageIQ/CloudForms.
 
-In general a product will need to register itself to Hawkular Services and expose metrics and operations through Hawkular's REST API (or a supported client). ManageIQ will need to be modified to read from Hawkular Services and expose those server/metrics and operations.
+In general a product will need to:
+ - register itself to Hawkular Services
+ - expose/push metrics to Hawkular Services
+ - expose operations to be executed from Hawkular Services 
+ 
+All done  through Hawkular's REST API (or a supported client).
+Once the metrics are collected and operations exposed, ManageIQ will need to be modified to read from Hawkular Services and expose those server/metrics and operations.
+
+Projects layered on top of WildFly benefit from an existing agent that can read metrics exposed through DMR or Jolokia and execute DMR operations.
