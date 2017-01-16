@@ -7,19 +7,29 @@ To execute and test the agent, Hawkular Services will need to be
 
 == WildFly based projects
 
-TODO: Instructions on how to use the WildFly agent to register the resource, expose metrics and operations. Wildfly layering requirements (such as declaring the product name correctly...)
+You first must obtain the Hawkular WildFly Agent installer. If you have a Hawkular Services server running, you can download the installer via the URL link:http://YOU-HAWKULAR_SERVER_HOST:8080/hawkular/wildfly-agent/installer[].
+
+You then run the installer, pointing it to the WildFly Server where you want to install the agent:
+
+```
+java -jar hawkular-wildfly-agent-installer.jar --target-location=/opt/wildfly-9.0.0.Final
+```
+
+Pass `--help` to the installer to see the options the installer accepts. You can also crack open the installer jar file and look at the file `hawkular-wildfly-agent-installer.properties` for more details about the options the installer supports. If you would rather use a .properties file to store the installer options (as opposed to passing in command line options for each individual configuration setting), you can do that and pass the filename of the configuration properties file to the agent via `--installer-config`.
+
+The installer injects a new subsystem in the WildFly Server's configuration file (e.g. standalone.xml) as well as additional data that the agent needs (for example, the installer also adds an outbound socket binding to point to the Hawkular Server). You can examine these configuration settings and change them as you see fit. In addition to the configuration, the agent binaries are stored as an add-on in the WildFly Server's modules (`modules/system/add-ons`).
 
 === Registering the server in Hawkular Inventory
 
-TODO
+Run you next run your WildFly Server instance, the agent will immediately register your server and all the resources inside of it with the Hawkular Services server. The agent will also register things like metric definitions, operation definitions, and the like. Tis inventory is stored inside the Hawkular Inventory component running in the HAwkular Services server. 
 
 === Add Metrics to Hawkular Metrics
 
-TODO
+By default, the Hawkular WildFly Agent collects a large set of pre-defined metrics. You can add, modify, or remove metrics from the list of metrics being collected. Look at standalone.xml and examine all the <metric-dmr> elements to see all the metrics that are collected.
 
 === Expose operations to Hawkular Services
 
-TODO
+Similar to metrics, there are a default set of operations that the agent has pre-defined in its configuration file. You can add, modify, or remove operations from the list of operations available to a particular resource. Look at standalone.xml and examine all the <operation-dmr> elements to see all the operations that can be invoked.
 
 == Non WildFly based projects
 
