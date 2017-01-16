@@ -1,3 +1,24 @@
-== Writing the integration for ManageIQ
+== Integration with ManageIQ
 
-TODO
+=== Brief Summary of MiQ Architecture
+ManageIQ targets to be a "meta-manager", i.e. the manager of other managers. In the MiQ terminology the child managers are called providers and their goal is to provide the information from the managed system as well as triggering the operations on the managed system.
+
+The task of integration of a particular system with ManageIQ can be reduced to a task of writing the corresponding ManageIQ provider. Because the ManageIQ is a web application written in the Ruby on Rails framework, it's quite natural to split the task to the MVC layers.
+
+=== Developer Setup
+todo (https://github.com/ManageIQ/guides/blob/master/developer_setup.md)
+
+=== Model
+todo
+
+=== View
+todo
+
+=== Controller
+todo
+
+=== Debugging
+todo
+
+=== Rails Console
+todo
