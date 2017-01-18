@@ -21,7 +21,7 @@ The installer injects a new subsystem in the WildFly Server's configuration file
 
 === Registering the server in Hawkular Inventory
 
-Run you next run your WildFly Server instance, the agent will immediately register your server and all the resources inside of it with the Hawkular Services server. The agent will also register things like metric definitions, operation definitions, and the like. Tis inventory is stored inside the Hawkular Inventory component running in the HAwkular Services server. 
+Next run your WildFly Server instance, the agent will immediately register your server and all the resources inside of it with the Hawkular Services server. The agent will also register things like metric definitions, operation definitions, and the like. This inventory is stored inside the Hawkular Inventory component running in the Hawkular Services server. 
 
 === Add Metrics to Hawkular Metrics
 
