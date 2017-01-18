@@ -1,24 +1,111 @@
-== Integration with ManageIQ
+=
+= Integration with ManageIQ
+_Goal of this document is to describe how to add new features to the middleware provider but it can also help when creating a new provider from scratch._
 
 === Brief Summary of MiQ Architecture
-ManageIQ targets to be a "meta-manager", i.e. the manager of other managers. In the MiQ terminology the child managers are called providers and their goal is to provide the information from the managed system as well as triggering the operations on the managed system.
+ManageIQ (MiQ) targets to be a "meta-manager", i.e. the manager of other managers. In the MiQ terminology the child managers are called providers and their goal is to provide the information from the managed system as well as triggering the operations on the managed system. Well, to be exact, the manager is the external system, while the provider is that part of MiQ that talks to that manager. Adding a provider that is already integrated in the code level to the MiQ is then link:http://manageiq.org/docs/get-started/add-a-provider[super easy].
 
 The task of integration of a particular system with ManageIQ can be reduced to a task of writing the corresponding ManageIQ provider. Because the ManageIQ is a web application written in the Ruby on Rails framework, it's quite natural to split the task to the MVC layers.
 
 === Developer Setup
-todo (https://github.com/ManageIQ/guides/blob/master/developer_setup.md)
+Not to reinvent the wheel I recommend going to the link:https://github.com/ManageIQ/guides/blob/master/developer_setup.md[developer setup] page and do all the necessary steps. After this, you should be able to run the MiQ web application with typing `rails s`.
 
-=== Model
+=== Data Flow
+Managers are responsible to feed the data into MiQ DB during the refresh operation. In the MiQ terminology it's feeding the MiQ inventory. This operation can be triggered explicitly from UI but it's also done automatically each 10 minutes. Provider is also capable of running operations. In the Hawkular provider we use the link:https://github.com/hawkular/hawkular-client-ruby[ruby gem] that is able to pull the data from the Hawkular Services server and also perform operations using the Websocket connection.
+
+After the Developer Setup step you should be able to run the UI server. This wont however spawn the worker thread that is responsible for doing the refresh operation on providers. If you need to do also the refresh on providers, I recommend running `rails c` in a new terminal window and typing in `simulate_queue_worker`. This command in the rails console will do the work if you click in UI on the refresh button (fig. 1). If you want to run the refresh directly from the rails console, you may want to do that by
+
+
+----
+reload!; EmsRefresh.refresh(ManageIQ::Providers::Hawkular::MiddlewareManager.last)
+----
+
+image:/images/refresh.png[alt="refresh provider in ui"]
+_figure 1_
+
+In case of Hawkular provider the refresh basically means pulling the relevant data from Hawkular inventory into MiQ inventory. Currently we pull all the feeds, servers (in domain and standalone), domains, server groups, deployments, datasources, JMS queues and topics. Where each entity has its own DB table.
+
+=== Model Layer
+Good start when adding new features or completely new provider is to model the entities and the relations among them and then create the model layer in MiQ. Because in order to be able to store the data from the Hawkular, we need to have the tables prepared for it.
+
+In Rails most often each entity has its own table in database. To manage the DB changes there is a support mechanism called migrations. Migrations allow easily migrate from one version of schema to an older one or upgrade to a new one. So the migration scripts basically contain the described change to the schema including the creation of a new table. They are stored in link:https://github.com/ManageIQ/manageiq/tree/master/db/migrate[here] and each migration is prefixed by the time when it was created and then followed by a brief description of what it does. Rails provide a way to scaffold them using for instance:
+
+----
+rails generate migration AddColumnNameToTableName column:string
+----
+
+This command should generate the properly named file with following content:
+
+----
+class AddColumnToTable < ActiveRecord::Migration[5.0] def change add_column :table_name, :column_name, :string end end
+----
+
+Scaffolding can make things faster, but often it's easier to write it from scratch for more complex scenarios.
+
+
+
+=== View Layer
+For more comprehensive and more general guide I recommend going link:https://github.com/ManageIQ/guides/blob/master/ui/patterns.md[here]. Recently the MiQ repo was split into the link:https://github.com/ManageIQ/manageiq/[backend repo] and the link:https://github.com/ManageIQ/manageiq-ui-classic[ui repo] (contains also all the controllers). Also some angular components are in link:https://github.com/ManageIQ/ui-components[components repo]. When implementing a new feature that changes the backend and has also some UI part, I recommend going through this link:https://github.com/ManageIQ/guides/blob/master/developer_setup/classic_ui_split.md#setting-up-the-repo[doc].
+
+==== Haml
+Haml is the templating mechanism used across ManageIQ. It provides a way to write the html code in a yaml-like language without the need of writing the tons of nested divs. It's pretty simple format and for instance this piece of haml code
+
+----
+#content .left.column %h2 Welcome to our site! %p= print_information .right.column = render :partial => "sidebar"
+----
+
+will be transformed into
+
+----
+<div id='content'> <div class='left column'> <h2>Welcome to our site!</h2> <p>Output of the print_information method.</p> </div> <div class="right column"> ... <!-- some component included as a partial --> </div> </div>
+----
+
+If you prefer the plain HTML or you already have your code in HTML, you may want to use some link:https://html2haml.herokuapp.com/[conversion tools] for that. Here is an example of link:https://github.com/ManageIQ/manageiq-ui-classic/tree/master/app/views/middleware_server[haml files] that are responsible for displaying the middleware server in MiQ.
+
+==== Partials
+Some pieces of UI that are used in many places can be extracted into so called partials and reused from multiple contexts. Partial is a haml file whose name starts with the underscore. So for instance once can create a file called `_sidebar.haml` and reuse this by calling `render :partial => sidebar`. Partials can also have a "slots for data" that are passed to the render method or one can call normal ruby methods from it similarly as in the normal haml files. This way we can customize them easily.
+
+==== Angular
+When Rails was created there were no SPA and nodejs fancy libraries. There is an big effort to convert as much UI code as possible into the Angular. The ui components repo mentioned above is completely written in Angular, while the old ui contains only some parts in angular. It's done in a way that haml files contains also the directives and calls to the angular controller (link:https://github.com/ManageIQ/manageiq-ui-classic/blob/master/app/views/middleware_server/_deploy.html.haml[example]). Angular controllers are stored in `app/assets/javascripts/controllers/` so for the previous example the controller counterpart is link:https://github.com/ManageIQ/manageiq-ui-classic/blob/master/app/assets/javascripts/controllers/middleware_server/middleware_server_controller.js[here].
+
+===== RxJS
+The RxJS library is used in a simple way as a message bus so one can send events --`sendDataWithRx()` and subscribe to a link:https://github.com/ReactiveX/rxjs/blob/master/doc/subject.md[Rx subject] --`ManageIQ.angular.rxSubject.subscribe(event => {..})`.
+
+
+==== Topology Graph
+
+image:/images/topology.png[alt="topology graph"]
+_figure 2_
+
+This component is written in angular and D3 and allows to see all the provider entities in one big graph. Adding new entities to this graph is done in the ruby code link:https://github.com/ManageIQ/manageiq-ui-classic/blob/master/app/services/middleware_topology_service.rb[here], the icon in legend has to be added in the haml link:/app/views/middleware_topology/show.html.haml[here]. Also if the icons are not centered perfectly in those circles add some special case in this link:https://github.com/ManageIQ/manageiq-ui-classic/blob/master/app/assets/javascripts/controllers/middleware_topology/middleware_topology_controller.js[angular controller].
+
+=== Controller Layer
 todo
 
-=== View
+==== Router
 todo
 
-=== Controller
+
+=== Gluing Everything Together
+todo
+
+==== Places that needs attention
+todo
+
+==== Auto-Magic Parts
 todo
 
 === Debugging
 todo
 
+==== Logs
+todo
+
+==== Pry
+todo
+
 === Rails Console
 todo
+
+=== Code Style
+todo (rubocop, haml lint)
