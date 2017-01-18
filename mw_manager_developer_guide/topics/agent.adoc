@@ -3,7 +3,7 @@
 In general, Hawkular is a push model. A resource or agent push metrics to Hawkular Services at regular or irregular intervals. 
 Agents may be embedded in the resource or not. For WildFly, the choice was made to have a agent in the form of a subsystem.
 
-To execute and test the agent, Hawkular Services will need to be 
+To execute and test the agent, Hawkular Services will need to be installed. (see Middleware Manager Installation Guide)
 
 == WildFly based projects
 
