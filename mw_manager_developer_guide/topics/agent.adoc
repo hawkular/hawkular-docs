@@ -7,35 +7,45 @@ To execute and test the agent, Hawkular Services will need to be
 
 == WildFly based projects
 
-TODO: Instructions on how to use the WildFly agent to register the resource, expose metrics and operations. Wildfly layering requirements (such as declaring the product name correctly...)
+You first must obtain the Hawkular WildFly Agent installer. If you have a Hawkular Services server running, you can download the installer via the URL link:http://YOUR-HAWKULAR_SERVER_HOST:8080/hawkular/wildfly-agent/installer[].
+
+You then run the installer, pointing it to the WildFly Server where you want to install the agent:
+
+```
+java -jar hawkular-wildfly-agent-installer.jar --target-location=/opt/wildfly-9.0.0.Final
+```
+
+Pass `--help` to the installer to see the options the installer accepts. You can also crack open the installer jar file and look at the file `hawkular-wildfly-agent-installer.properties` for more details about the options the installer supports. If you would rather use a .properties file to store the installer options (as opposed to passing in command line options for each individual configuration setting), you can do that and pass the filename of the configuration properties file to the agent via `--installer-config`.
+
+The installer injects a new subsystem in the WildFly Server's configuration file (e.g. standalone.xml) as well as additional data that the agent needs (for example, the installer also adds an outbound socket binding to point to the Hawkular Server). You can examine these configuration settings and change them as you see fit. In addition to the configuration, the agent binaries are stored as an add-on in the WildFly Server's modules (`modules/system/add-ons`).
 
 === Registering the server in Hawkular Inventory
 
-TODO
+Run you next run your WildFly Server instance, the agent will immediately register your server and all the resources inside of it with the Hawkular Services server. The agent will also register things like metric definitions, operation definitions, and the like. Tis inventory is stored inside the Hawkular Inventory component running in the HAwkular Services server. 
 
 === Add Metrics to Hawkular Metrics
 
-TODO
+By default, the Hawkular WildFly Agent collects a large set of pre-defined metrics. You can add, modify, or remove metrics from the list of metrics being collected. Look at standalone.xml and examine all the <metric-dmr> elements to see all the metrics that are collected.
 
 === Expose operations to Hawkular Services
 
-TODO
+Similar to metrics, there are a default set of operations that the agent has pre-defined in its configuration file. You can add, modify, or remove operations from the list of operations available to a particular resource. Look at standalone.xml and examine all the <operation-dmr> elements to see all the operations that can be invoked.
 
 == Non WildFly based projects
 
-TODO: Instructions for non-Wildfly based agent. What API to use, what tags/structure to use...
+If you have projects that are not based on or deployed in a WildFly Server, you can write your own agent. You will need to store the metrics in Hawkular Metrics using the link:http://www.hawkular.org/docs/rest/rest-metrics.html[Metrics REST API]. You will store inventory (if your agent collects inventory information) in Hawkular Inventory using the link:http://www.hawkular.org/docs/rest/rest-inventory.html[Inventory REST API].
 
 === Registering the server in Hawkular Inventory
 
-TODO
+Each agent in the Hawkular ecosystem is identified with a feed ID. If you are to create your own agent, you must first have that agent link:https://github.com/hawkular/hawkular-agent/blob/master/hawkular-wildfly-agent/src/main/java/org/hawkular/agent/monitor/service/MonitorService.java#L1007[create a feed]. You can then use the REST API to link:https://github.com/hawkular/hawkular-agent/blob/master/hawkular-wildfly-agent/src/main/java/org/hawkular/agent/monitor/storage/AsyncInventoryStorage.java[sync your inventory] into Hawkular Inventory.
 
 === Add Metrics to Hawkular Metrics
 
-TODO
+You create metric definitions in Hawkular Inventory as well as in Hawkular Metris. This allows users of the system to know what kinds of metrics are to be stored.
 
 === Expose operations to Hawkular Services
 
-TODO
+Operations are invoked by clients that send JSON commands over the persistent Web Socket connection that the Hawkular Services server provides to clients and agents. If an agent wants to support operations invoked by Hawkular clients, the agent must connect to the server over the server-side Web Socket. You can see how the Hawkular WildFly Agent implements this link:https://github.com/hawkular/hawkular-agent/tree/master/hawkular-wildfly-agent/src/main/java/org/hawkular/agent/monitor/cmd[here]. You can see what a Hawkular client needs to do when it wants to send a command to invoke operations, see link:https://github.com/hawkular/hawkular-agent/blob/master/hawkular-wildfly-agent-itest-parent/hawkular-wildfly-agent-command-cli/src/main/java/org/hawkular/agent/commandcli/CommandCli.java[here].
 
 == How to test/verify
 
