@@ -40,7 +40,7 @@ reload!; EmsRefresh.refresh(ManageIQ::Providers::Hawkular::MiddlewareManager.las
 image:/images/refresh.png[alt="refresh provider in ui"]
 _figure 1_
 
-In case of Hawkular provider the refresh basically means pulling the relevant data from Hawkular inventory into MiQ
+In case of Hawkular provider, the refresh basically means pulling the relevant data from Hawkular inventory into MiQ
 inventory. Currently we pull all the feeds, servers (in domain and standalone), domains, server groups, deployments,
 datasources, JMS queues and topics. Where each entity has its own DB table.
 
@@ -148,10 +148,27 @@ link:https://github.com/ManageIQ/manageiq-ui-classic/blob/master/app/assets/java
 controller].
 
 === Controller Layer
-todo
+While the model and most of the business logic is in the `manageiq/manageiq` repository, the controller+view is in `manageiq/manageiq-ui-classic` repo.
 
 ==== Router
-todo
+In Rails apps, all the possible actions must be whitelisted in the router configuration. For MiQ it happend to be in this
+link:https://github.com/ManageIQ/manageiq-ui-classic/blob/036735fcd678430376402f7d81f7d0d7e5c69e5b/config/routes.rb[file].
+Most common actions are:
+* `show` (detail page of entity),
+* `show_list` (list of n entities),
+* `new` & `edit` (if creating and editing is supported)
+* `tagging_edit` & `tag_edit_form_field_changed` (tagging mechanism in MiQ)
+* `button` (when clicking on a button in the toolbar, this action is invoked)
+* `quick_search` (if we want the search form field in the GTL view)
+* `perf_top_chart` (metrics)
+..
+
+NOTE: These actions are implemented by actual methods on the corresponding controller class. So for instance if http get is sent
+to `http://localhost:3000/middleware_server/show/26` the method `show` in the `middleware_server_controller.rb` is invoked
+and the `middleware_server` entity with id `26` will be accessible in the `@record` variable. After further processing like
+(setting the `@display`) the data will be rendered using those corresponding haml template files. For the described example,
+this link:https://github.com/ManageIQ/manageiq-ui-classic/blob/036735fcd678430376402f7d81f7d0d7e5c69e5b/app/views/middleware_server/show.html.haml[file] will be used.
+Again, the naming is absolutely crucial here, because everything should automagically work when preserving those conventions.
 
 
 === Gluing Everything Together
@@ -164,16 +181,60 @@ todo
 todo
 
 === Debugging
-todo
-
 ==== Logs
-todo
+There are actually two log files where you can find what is wrong.
+* `log/evm.log`
+* `log/development.log`
+
+There should be a lot of sql queries that may be handy during the development. Of course, you can use them in the `psql` client.
+```
+psql -U postgres vmdb_development
+```
+Should open the Postgres client on the dev db.
 
 ==== Pry
-todo
+I suggest adding this line to `Gemfile.dev.rb` (create this file if it doesn't exist in the root of manageiq/manageiq repo):
+```ruby
+gem 'pry-byebug'
+```
+Then after running `bundle install`, you should be all set. Now, adding the breakpoint means writing `binding.pry` somewhere in the code.
+Once the ruby executes the code with this line, it stops the execution and you should be able to debug the program in the command
+line.
+
+TIP: This works also for the haml files. But instead of using just `binding.pry`, use `- binding.pry` (+ respect the intendation of the file)
+
+==== Console
+Other way of degugging is just printing the variables to the console by `puts foo`. Object can have the `.to_s` method that
+is responsible for printing the object (equivalent to `.toString()` method in Java), if the `.to_s` method is not implemented,
+you can use the in `.inspect` method that provides the info about the object.
 
 === Rails Console
-todo
+In Rails apps, you can use the so called rails console by typing the `rails console` or `rails c` to the command line
+(being in the root of the repo). This opens the REPL Ruby console, where you can type in Ruby code and it evaluates it.
+What's interesting here is that you can actually alter the running Rails application by:
+* creating new entities: `MyAwesomeEntity.create(params)`
+* finding entities: `MyAwesomeEntity.all` / `MyAwesomeEntity.find(foo: 'bar')`
+* delete: `MyAwesomeEntity.find(foo: 'bar').destroy` / `MyAwesomeEntity.delete(foo: 'bar')`
+...
 
 === Code Style
-todo (rubocop, haml lint)
+For up to date coding standards consult this link:https://github.com/ManageIQ/guides/blob/master/coding_style_and_standards.md[guide].
+The travis build is set that it checks what rules are violated and reports it in the PR comment. If you want to run it locally, just
+type in: `rubocop` and/or `haml-lint` (if necessary, install those ruby gems).
+
+There is also a bash helper script called link:https://github.com/zeari/miq-helpers/blob/master/murphy.sh[`murhy.sh`]
+ that runs the `rubocop` and `haml-lint` only on those commits that haven't been pushed yet.
+It is similar to the `rubocop-git` gem.
+
+== Some common tasks
+Rather than trying to describe each part separately as before, here I would like to focus on some common tasks and provide a link to
+PRs/commits that did that in the past.
+
+=== Creating new Models and Migrations
+
+=== Handling the Refresh Logic and Saving to the DB
+
+=== Registering the Features in for RBAC
+`miq_product_features.yml`
+
+=== Exposing the Live Metrics for Entity
