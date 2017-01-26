@@ -1,5 +1,4 @@
-=
-= Integration with ManageIQ
+== Integration with ManageIQ
 _Goal of this document is to describe how to add new features to the middleware provider but it can also help when
 creating a new provider from scratch._
 
@@ -56,19 +55,19 @@ table. They are stored in link:https://github.com/ManageIQ/manageiq/tree/master/
 is prefixed by the time when it was created and then followed by a brief description of what it does. Rails provide
 a way to scaffold them using for instance:
 
+[source,bash]
 ----
 rails generate migration AddColumnNameToTableName column:string
 ----
 
 This command should generate the properly named file with following content:
 
+[source,ruby]
 ----
 class AddColumnToTable < ActiveRecord::Migration[5.0] def change add_column :table_name, :column_name, :string end end
 ----
 
 Scaffolding can make things faster, but often it's easier to write it from scratch for more complex scenarios.
-
-
 
 === View Layer
 For more comprehensive and more general guide I recommend going
@@ -83,6 +82,7 @@ link:https://github.com/ManageIQ/guides/blob/master/developer_setup/classic_ui_s
 Haml is the templating mechanism used across ManageIQ. It provides a way to write the html code in a yaml-like language
 without the need of writing the tons of nested divs. It's pretty simple format and for instance this piece of haml code
 
+[source,haml]
 ----
 #content
   .left.column
@@ -94,6 +94,7 @@ without the need of writing the tons of nested divs. It's pretty simple format a
 
 will be transformed into
 
+[source,haml]
 ----
 <div id='content'>
   <div class='left column'>
@@ -154,12 +155,13 @@ While the model and most of the business logic is in the `manageiq/manageiq` rep
 In Rails apps, all the possible actions must be whitelisted in the router configuration. For MiQ it happend to be in this
 link:https://github.com/ManageIQ/manageiq-ui-classic/blob/036735fcd678430376402f7d81f7d0d7e5c69e5b/config/routes.rb[file].
 Most common actions are:
+
 * `show` (detail page of entity),
 * `show_list` (list of n entities),
 * `new` & `edit` (if creating and editing is supported)
 * `tagging_edit` & `tag_edit_form_field_changed` (tagging mechanism in MiQ)
 * `button` (when clicking on a button in the toolbar, this action is invoked)
-* `quick_search` (if we want the search form field in the GTL view)
+* `quick_search` (if we want the search form field in the GTL (grid, tiles, list) view)
 * `perf_top_chart` (metrics)
 ..
 
@@ -170,33 +172,59 @@ and the `middleware_server` entity with id `26` will be accessible in the `@reco
 this link:https://github.com/ManageIQ/manageiq-ui-classic/blob/036735fcd678430376402f7d81f7d0d7e5c69e5b/app/views/middleware_server/show.html.haml[file] will be used.
 Again, the naming is absolutely crucial here, because everything should automagically work when preserving those conventions.
 
-
 === Gluing Everything Together
-todo
+Unfortunately, there is no easy way here. MiQ is quite old piece of software and ofter, it is necessary to add the entity
+name to some long list of other entity names to achieve a simple task. There is no simple logic. Best way to struggle with it,
+is using the debugger and trying to figure out, why it's not working as it should (somewhere in the chain there must be a check,
+if the current entity name is in some list). Or to look to some existent PRs that were adding similar features and check what files
+need to be modified.
 
 ==== Places that needs attention
-todo
+Here is the list (but I am almost sure I forgot to something) of files that may need changing:
 
-==== Auto-Magic Parts
-todo
+* `db/fixtures/miq_product_features.yml` (list of features that a role can do on entity, used by RBAC)
+* `app/models/ems_refresh/save_inventory_middleware.rb` (refresh logic of the provider, basically consumes the output of `refresh_parser.sh`)
+* `product/views/YourNewEntity.yaml` (although this is only report config, it's necessary for UI to work properly, check for the similar in the directory)
+(^ in the backend repo)
+
+* `config/routes.rb` (this was described in the Router section)
+* `app/decorators/your_new_entity_decorator.rb` (there is a convention to put a placeholder icons here)
+* `app/controllers/your_new_entity_controller.rb` (the controller for the entity)
+* `app/views/your_new_entity/{show|_main|show_list|some_other_action|_some_other_partial}.html.haml`
+* `app/views/layouts/listnav/_your_new_entity.html.haml` (the side panel, this needs to be also registered in `ApplicationHelper.render_listnav_filename`)
+* `app/helpers/your_new_entity_helper/textual_summary.rb`
+* `app/helpers/your_new_entity_helper.rb`
+* `app/views/configuration/_ui_2.html.haml`
+* `app/views/layouts/listnav/_ems_middleware.html.haml` (if you need direct link in web UI from provider)
+* `app/views/shared/views/ems_common/_show.html.haml` (same as ^)
+* `app/helpers/application_helper.rb` (multiple use-cases)
+* `/app/helpers/application_helper/toolbar_chooser.rb` (toolbar with buttons)
+* `/app/helpers/application_helper/toolbar/your_new_entity_center.rb` (description of what buttons are allowed for 1 entity)
+* `/app/helpers/application_helper/toolbar/your_new_entities_center.rb` (same as above, except it's for the GTL view)
+* `app/views/layouts/_perf_options.html.haml` (metrics)
+(^ in the frontend repo)
 
 === Debugging
 ==== Logs
 There are actually two log files where you can find what is wrong.
+
 * `log/evm.log`
 * `log/development.log`
 
 There should be a lot of sql queries that may be handy during the development. Of course, you can use them in the `psql` client.
-```
+[source,bash]
+----
 psql -U postgres vmdb_development
-```
+----
 Should open the Postgres client on the dev db.
 
 ==== Pry
 I suggest adding this line to `Gemfile.dev.rb` (create this file if it doesn't exist in the root of manageiq/manageiq repo):
-```ruby
+
+[source, ruby]
+----
 gem 'pry-byebug'
-```
+----
 Then after running `bundle install`, you should be all set. Now, adding the breakpoint means writing `binding.pry` somewhere in the code.
 Once the ruby executes the code with this line, it stops the execution and you should be able to debug the program in the command
 line.
@@ -212,10 +240,13 @@ you can use the in `.inspect` method that provides the info about the object.
 In Rails apps, you can use the so called rails console by typing the `rails console` or `rails c` to the command line
 (being in the root of the repo). This opens the REPL Ruby console, where you can type in Ruby code and it evaluates it.
 What's interesting here is that you can actually alter the running Rails application by:
+
 * creating new entities: `MyAwesomeEntity.create(params)`
 * finding entities: `MyAwesomeEntity.all` / `MyAwesomeEntity.find(foo: 'bar')`
 * delete: `MyAwesomeEntity.find(foo: 'bar').destroy` / `MyAwesomeEntity.delete(foo: 'bar')`
 ...
+
+The methods like `.create`, `.all`, `.find` are actually not defined on the models, but comes from the ActiveRecord (~ORM) framework.
 
 === Code Style
 For up to date coding standards consult this link:https://github.com/ManageIQ/guides/blob/master/coding_style_and_standards.md[guide].
@@ -231,10 +262,75 @@ Rather than trying to describe each part separately as before, here I would like
 PRs/commits that did that in the past.
 
 === Creating new Models and Migrations
+As mentioned above, there is a scaffolding helper for creating the migrations. The db knows its current version, so
+if there is a new migration that hasn't been applied, it will apply it when running `rake db:migrate`. In case, there was
+anything wrong with the migration, one can go back and undo it by `rake db:rollback`, change the migration file and try again.
+
+Example commits:
+
+* link:https://github.com/Jiri-Kremser/manageiq/commit/9e67f3d449d48f4d83122f043a79640ec1516c3c[migrations]
+* link:https://github.com/Jiri-Kremser/manageiq/commit/1a9a62c6f2317bd3ddf070d0a56a0d247efd9066[models]
 
 === Handling the Refresh Logic and Saving to the DB
 
+Here is an example link:https://github.com/Jiri-Kremser/manageiq/commit/3626de3ed75adeae58dea767f5b50cd39399bc30[commit].
+
 === Registering the Features in for RBAC
-`miq_product_features.yml`
+If everything is as it should be, but you still can't see anything in the UI, this may be the purpose. MiQ has the RBAC model
+that checks if the user in the current role is able to access the feature. This is described in the yaml file called `miq_product_features.yml`.
+
+When adding the new entity, it is also necessary add the record here and describe it. It is best to copy&past the existing
+definition and change the details.
+
+Here is an example link:https://github.com/Jiri-Kremser/manageiq/commit/0ac93b5e2853628582587c98ee819c50051e7870[commit].
+
+=== If the Side Panel or Toolbar is Missing
+If the screen should have the left panel with navigation, it needs the be whitelisted in:
+`ApplicationHelper.render_listnav_filename`. There are more places in that "god file" where new entity needs to be
+registered (for instance if it wants to participate in the GTL views)
+
+The side navigation layout is described in ``/app/views/layouts/listnav/_X.html.haml`
+
+As for the missing toolbar, adding the plural of the entity name for list and singular for the detail page to this file
+`/app/helpers/application_helper/toolbar/middleware_datasources_center.rb` is needed + register itself here:
+`/app/helpers/application_helper/toolbar_chooser.rb:439` (2 places in that file, 1 for singular and 1 for plural).
+Then automagic should work.
 
 === Exposing the Live Metrics for Entity
+
+If your entity should display the live metric, you need to do following:
+
+* `app/controllers/application_controller/performance.rb`,
+* including the `LiveMetricMixin` in the entity model,
+* creating the entity that ends with `Perf`, etc.
+* changing `app/views/layouts/_perf_options.html.haml`
+* the `show.haml` of the entity has to contain:
+
+[source, haml]
+----
+if @showtype == "performance"
+    = render(:partial => "layouts/performance")
+    :javascript
+      var miq_after_onload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
+----
+
+* adding `perf_chart_chooser` action into `router.rb` to corresponding entity
+* adding to `db/fixtures/miq_product_features.yml` (`X` is the entity name)
+
+[source,yaml]
+----
+     - :name: Utilization
+        :description: Show Capacity & Utilization data of Middleware `X`
+        :feature_type: view
+        :identifier: X_perf
+----
+
+* create `/product/live_metric_middleware_X.yaml` similar to the existing ones
+* creating a yaml file in `product/charts/layouts/{Y}_perf_charts/X.yaml` similar to the existing ones (`X` is entity name and Y is the interval or "realtime" phrase). The cols ids must match with the ids defined in `/product/live_metric_middleware_X.yaml`
+* add the tests
+
+commits that adds it for the datasource entity:
+
+* https://github.com/ManageIQ/manageiq/commit/e328df1432fb5916113f67774550fe783101aac2
+* https://github.com/ManageIQ/manageiq/commit/e22d9194da522fc9bc58b554984c6927ad58043b
+* https://github.com/ManageIQ/manageiq/commit/dbba3abaaa82b22e8311ce6e375c2d372b123184
