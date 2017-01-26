@@ -75,11 +75,10 @@ link:https://github.com/ManageIQ/guides/blob/master/ui/patterns.md[here]. Recent
 MiQ repo was split into the link:https://github.com/ManageIQ/manageiq/[backend repo] and the
 link:https://github.com/ManageIQ/manageiq-ui-classic[ui repo] (contains also all the controllers). Also
 some angular components are in link:https://github.com/ManageIQ/ui-components[components repo]. When
-implementing a new feature that changes the backend and has also some UI part, I recommend going through this
-link:https://github.com/ManageIQ/guides/blob/master/developer_setup/classic_ui_split.md#setting-up-the-repo[doc].
+implementing a new feature that changes the backend and has also some UI part.
 
-==== Haml
-Haml is the templating mechanism used across ManageIQ. It provides a way to write the html code in a yaml-like language
+==== HAML
+Haml is the templating mechanism used across ManageIQ. It provides a way to write the HTML code in a yaml-like language
 without the need of writing the tons of nested divs. It's pretty simple format and for instance this piece of haml code
 
 [source,haml]
@@ -114,16 +113,16 @@ responsible for displaying the middleware server in MiQ.
 
 ==== Partials
 Some pieces of UI that are used in many places can be extracted into so called partials and reused from multiple
-contexts. Partial is a haml file whose name starts with the underscore. So for instance once can create a file called
+contexts. Partial is a HAML file whose name starts with the underscore. So for instance once can create a file called
 `_sidebar.haml` and reuse this by calling `render :partial => sidebar`. Partials can also have a "slots for data"
-that are passed to the render method or one can call normal ruby methods from it similarly as in the normal haml
+that are passed to the render method or one can call normal ruby methods from it similarly as in the normal HAML
 files. This way we can customize them easily.
 
 ==== Angular
 When Rails was created there were no SPA and nodejs fancy libraries. There is an big effort to
-convert as much UI code as possible into the Angular. The ui components repo mentioned above
-is completely written in Angular, while the old ui contains only some parts in angular. It's
-done in a way that haml files contains also the directives and calls to the angular controller
+convert as much UI code as possible into the Angular. The UI components repo mentioned above
+is completely written in Angular, while the old UI contains only some parts in angular. It's
+done in a way that HAML files contains also the directives and calls to the angular controller
 (link:https://github.com/ManageIQ/manageiq-ui-classic/blob/master/app/views/middleware_server/_deploy.html.haml[example]).
 Angular controllers are stored in `app/assets/javascripts/controllers/`
 so for the previous example the controller counterpart is
@@ -143,7 +142,7 @@ _figure 2_
 This component is written in angular and D3 and allows to see all the provider
 entities in one big graph. Adding new entities to this graph is done in the ruby code
 link:https://github.com/ManageIQ/manageiq-ui-classic/blob/master/app/services/middleware_topology_service.rb[here],
-the icon in legend has to be added in the haml link:/app/views/middleware_topology/show.html.haml[here]. Also
+the icon in legend has to be added in the HAML link:/app/views/middleware_topology/show.html.haml[here]. Also
 if the icons are not centered perfectly in those circles add some special case in this
 link:https://github.com/ManageIQ/manageiq-ui-classic/blob/master/app/assets/javascripts/controllers/middleware_topology/middleware_topology_controller.js[angular
 controller].
@@ -168,7 +167,7 @@ Most common actions are:
 NOTE: These actions are implemented by actual methods on the corresponding controller class. So for instance if http get is sent
 to `http://localhost:3000/middleware_server/show/26` the method `show` in the `middleware_server_controller.rb` is invoked
 and the `middleware_server` entity with id `26` will be accessible in the `@record` variable. After further processing like
-(setting the `@display`) the data will be rendered using those corresponding haml template files. For the described example,
+(setting the `@display`) the data will be rendered using those corresponding HAML template files. For the described example,
 this link:https://github.com/ManageIQ/manageiq-ui-classic/blob/036735fcd678430376402f7d81f7d0d7e5c69e5b/app/views/middleware_server/show.html.haml[file] will be used.
 Again, the naming is absolutely crucial here, because everything should automagically work when preserving those conventions.
 
@@ -182,27 +181,27 @@ need to be modified.
 ==== Places that needs attention
 Here is the list (but I am almost sure I forgot to something) of files that may need changing:
 
-* `db/fixtures/miq_product_features.yml` (list of features that a role can do on entity, used by RBAC)
-* `app/models/ems_refresh/save_inventory_middleware.rb` (refresh logic of the provider, basically consumes the output of `refresh_parser.sh`)
-* `product/views/YourNewEntity.yaml` (although this is only report config, it's necessary for UI to work properly, check for the similar in the directory)
-(^ in the backend repo)
+* in the backend repo:
+** `db/fixtures/miq_product_features.yml` (list of features that a role can do on entity, used by RBAC)
+** `app/models/ems_refresh/save_inventory_middleware.rb` (refresh logic of the provider, basically consumes the output of `refresh_parser.sh`)
+** `product/views/YourNewEntity.yaml` (although this is only report config, it's necessary for UI to work properly, check for the similar in the directory)
 
-* `config/routes.rb` (this was described in the Router section)
-* `app/decorators/your_new_entity_decorator.rb` (there is a convention to put a placeholder icons here)
-* `app/controllers/your_new_entity_controller.rb` (the controller for the entity)
-* `app/views/your_new_entity/{show|_main|show_list|some_other_action|_some_other_partial}.html.haml`
-* `app/views/layouts/listnav/_your_new_entity.html.haml` (the side panel, this needs to be also registered in `ApplicationHelper.render_listnav_filename`)
-* `app/helpers/your_new_entity_helper/textual_summary.rb`
-* `app/helpers/your_new_entity_helper.rb`
-* `app/views/configuration/_ui_2.html.haml`
-* `app/views/layouts/listnav/_ems_middleware.html.haml` (if you need direct link in web UI from provider)
-* `app/views/shared/views/ems_common/_show.html.haml` (same as ^)
-* `app/helpers/application_helper.rb` (multiple use-cases)
-* `/app/helpers/application_helper/toolbar_chooser.rb` (toolbar with buttons)
-* `/app/helpers/application_helper/toolbar/your_new_entity_center.rb` (description of what buttons are allowed for 1 entity)
-* `/app/helpers/application_helper/toolbar/your_new_entities_center.rb` (same as above, except it's for the GTL view)
-* `app/views/layouts/_perf_options.html.haml` (metrics)
-(^ in the frontend repo)
+* in the frontend repo:
+** `config/routes.rb` (this was described in the Router section)
+** `app/decorators/your_new_entity_decorator.rb` (there is a convention to put a placeholder icons here)
+** `app/controllers/your_new_entity_controller.rb` (the controller for the entity)
+** `app/views/your_new_entity/{show|_main|show_list|some_other_action|_some_other_partial}.html.haml`
+** `app/views/layouts/listnav/_your_new_entity.html.haml` (the side panel, this needs to be also registered in `ApplicationHelper.render_listnav_filename`)
+** `app/helpers/your_new_entity_helper/textual_summary.rb`
+** `app/helpers/your_new_entity_helper.rb`
+** `app/views/configuration/_ui_2.html.haml`
+** `app/views/layouts/listnav/_ems_middleware.html.haml` (if you need direct link in web UI from provider)
+** `app/views/shared/views/ems_common/_show.html.haml` (same as ^)
+** `app/helpers/application_helper.rb` (multiple use-cases)
+** `/app/helpers/application_helper/toolbar_chooser.rb` (toolbar with buttons)
+** `/app/helpers/application_helper/toolbar/your_new_entity_center.rb` (description of what buttons are allowed for 1 entity)
+** `/app/helpers/application_helper/toolbar/your_new_entities_center.rb` (same as above, except it's for the GTL view)
+** `app/views/layouts/_perf_options.html.haml` (metrics)
 
 === Debugging
 ==== Logs
@@ -211,12 +210,13 @@ There are actually two log files where you can find what is wrong.
 * `log/evm.log`
 * `log/development.log`
 
-There should be a lot of sql queries that may be handy during the development. Of course, you can use them in the `psql` client.
+There should be a lot of SQL queries that may be handy during the development. Of course, you can use them in the `psql` client.
 [source,bash]
 ----
 psql -U postgres vmdb_development
 ----
-Should open the Postgres client on the dev db.
+The command should open the Postgres client on the dev db. Btw. by default the development environment is active, this can be changed
+by `rails s -e production`.
 
 ==== Pry
 I suggest adding this line to `Gemfile.dev.rb` (create this file if it doesn't exist in the root of manageiq/manageiq repo):
@@ -229,7 +229,7 @@ Then after running `bundle install`, you should be all set. Now, adding the brea
 Once the ruby executes the code with this line, it stops the execution and you should be able to debug the program in the command
 line.
 
-TIP: This works also for the haml files. But instead of using just `binding.pry`, use `- binding.pry` (+ respect the intendation of the file)
+TIP: This works also for the HAML files. But instead of using just `binding.pry`, use `- binding.pry` (+ respect the intendation of the file)
 
 ==== Console
 Other way of degugging is just printing the variables to the console by `puts foo`. Object can have the `.to_s` method that
@@ -273,23 +273,31 @@ Example commits:
 
 === Handling the Refresh Logic and Saving to the DB
 
+We pull the data from the Hawkular Services Inventory using the link:github.com/hawkular/hawkular-client-ruby[hawkular_client] ruby gem.
+This is mostly happening in the `app/models/manageiq/providers/hawkular/middleware_manager/refresh_parser.rb` class. The class also calls the
+method that are defined directly on the middleware provider. Output of the `MiddlewareManager::RefreshParser.ems_inv_to_hashes`
+is then after some further massaging passed into `app/models/ems_refresh/save_inventory_middleware.rb`. The logic in this class has
+quite strong assumptions on the data being stored. It assumes that it has the tree structure and each entity contains its kids as a nested hash.
+If you are able to achieve that structure in the `refresh_parser.rb`, you are halfway done. Otherwise, good luck :]
+
 Here is an example link:https://github.com/Jiri-Kremser/manageiq/commit/3626de3ed75adeae58dea767f5b50cd39399bc30[commit].
 
 === Registering the Features in for RBAC
 If everything is as it should be, but you still can't see anything in the UI, this may be the purpose. MiQ has the RBAC model
 that checks if the user in the current role is able to access the feature. This is described in the yaml file called `miq_product_features.yml`.
 
-When adding the new entity, it is also necessary add the record here and describe it. It is best to copy&past the existing
-definition and change the details.
+When adding the new entity, it is also necessary add the record
+link:https://github.com/ManageIQ/manageiq/blob/master/db/fixtures/miq_product_features.yml[here] and describe it.
+It is best to copy&paste the existing definition and change the details.
 
 Here is an example link:https://github.com/Jiri-Kremser/manageiq/commit/0ac93b5e2853628582587c98ee819c50051e7870[commit].
 
 === If the Side Panel or Toolbar is Missing
 If the screen should have the left panel with navigation, it needs the be whitelisted in:
 `ApplicationHelper.render_listnav_filename`. There are more places in that "god file" where new entity needs to be
-registered (for instance if it wants to participate in the GTL views)
+registered (for instance if it wants to participate in the GTL views).
 
-The side navigation layout is described in ``/app/views/layouts/listnav/_X.html.haml`
+The side navigation layout is described in `/app/views/layouts/listnav/_X.html.haml`
 
 As for the missing toolbar, adding the plural of the entity name for list and singular for the detail page to this file
 `/app/helpers/application_helper/toolbar/middleware_datasources_center.rb` is needed + register itself here:
@@ -298,7 +306,7 @@ Then automagic should work.
 
 === Exposing the Live Metrics for Entity
 
-If your entity should display the live metric, you need to do following:
+If the metric graphs should be displayed for your entity, you need to do following:
 
 * `app/controllers/application_controller/performance.rb`,
 * including the `LiveMetricMixin` in the entity model,
@@ -320,7 +328,7 @@ if @showtype == "performance"
 [source,yaml]
 ----
      - :name: Utilization
-        :description: Show Capacity & Utilization data of Middleware `X`
+        :description: Show Capacity & Utilization data of Middleware X
         :feature_type: view
         :identifier: X_perf
 ----
