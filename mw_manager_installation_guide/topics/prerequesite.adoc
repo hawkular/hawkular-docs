@@ -67,8 +67,8 @@ systemctl start rh-postgresql95-postgresql
 
 Open the firewall for PostgreSQL remote connections:
 ----
-sudo firewall-cmd --permanent --add-port=5432/tcp
-sudo firewall-cmd --add-port=5432/tcp
+firewall-cmd --permanent --add-port=5432/tcp
+firewall-cmd --add-port=5432/tcp
 ----
 
 Edit `/var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf` to allow remote connections.  Add the following line:
