@@ -60,10 +60,9 @@ Then install the server with:
 [source, bash]
 ----
 yum install rh-postgresql95
-scl enable rh-postgresql95 bash
-postgresql-setup --initdb
-service rh-postgresql95-postgresql start
-systemctl enable rh-postgresql95-postgresql.service
+scl enable rh-postgresql95 'postgresql-setup --initdb'
+systemctl enable rh-postgresql95-postgresql
+systemctl start rh-postgresql95-postgresql
 ----
 
 Open the firewall for PostgreSQL remote connections:
