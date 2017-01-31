@@ -78,7 +78,7 @@ Edit `/var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf` to allow remot
 listen_addresses = '*'
 ----
 
-Edit /var/lib/pgsql/data/pg_hba.conf to allow a user to connect to the `mwmanager` database.  Add the following line:
+Edit /var/opt/rh/rh-postgresql95/lib/pgsql/data/pg_hba.conf to allow a user to connect to the `mwmanager` database.  Add the following line:
 
 Replace `my_db_username` with the value of your choice
 .pg_hba.conf
