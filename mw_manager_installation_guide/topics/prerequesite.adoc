@@ -94,8 +94,7 @@ systemctl restart rh-postgresql95-postgresql.service
 Create the `mwmanager` database:
 ----
 su postgres
-systemctl enable rh-postgresql95-postgresql.service
-psql
+scl enable rh-postgresql95 'psql'
 ----
 
 Replace `my_db_username` with the value chosen in pg_hba.conf and `my_db_password` with the value of your choice:
