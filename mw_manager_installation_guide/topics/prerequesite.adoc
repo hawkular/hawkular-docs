@@ -35,13 +35,13 @@ yum install docker
 Start the docker service:
 [source, bash]
 ----
-systemctl start docker.service
+systemctl start docker
 ----
 
 Enable the docker service:
 [source, bash]
 ----
-systemctl enable docker.service
+systemctl enable docker
 ----
 
 == Installing PostgreSQL Server 9.5
@@ -88,7 +88,7 @@ host   mwmanager   my_db_username   0.0.0.0/0   md5
 Then restart PostgreSQL
 [source, bash]
 ----
-systemctl restart rh-postgresql95-postgresql.service
+systemctl restart rh-postgresql95-postgresql
 ----
 
 Create the `mwmanager` database:
