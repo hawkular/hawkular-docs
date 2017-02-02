@@ -7,15 +7,22 @@
 docker run --name mwmanager-cassandra -d brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest
 ----
 
-NOTE: By default the Cassandra container will create a volume under
-`opt/apache-cassandra/data`.  This container directory will automatically be
+[NOTE]
+====
+By default the Cassandra container will create a volume under
+`/opt/apache-cassandra/data`.  This container directory will automatically be
 mapped to a unique local directory which can be viewed using
 "docker inspect <container-id>".  The "-v" option can be used to map the
 Cassandra data volume to a specific host directory.
-`docker run --name mwmanager-cassandra -d -e CASSANDRA_START_RPC=true -v /tmp/mydatadir:/opt/apache-cassandra/data:Z
-brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-mm-7-tech-preview/middleware-manager-datastore:latest`
-Note: the "Z" option is necessary on RHEL/Fedora based systems to correctly set the selinux permissions.
+[source, bash]
+----
+docker run --name mwmanager-cassandra -d -e CASSANDRA_START_RPC=true \
+           -v /tmp/mydatadir:/opt/apache-cassandra/data:Z \
+           registry.access.redhat.com/jboss-mm-7-tech-preview/middleware-manager-datastore:latest
+----
 
+The "Z" option is necessary on RHEL/Fedora based systems to correctly set the selinux permissions.
+====
 
 With this command we are starting our first Cassandra node.
 We can verify that the server is running, with the following command:
