@@ -19,7 +19,7 @@ link:https://github.com/ManageIQ/guides/blob/master/developer_setup.md[developer
 necessary steps. After this, you should be able to run the MiQ web application with typing `rails server` (shortly `rails s`)
 or even `bundle exec rails server` which makes sure it is running in context of the current bundle (more info
 link:http://stackoverflow.com/a/6588708/1594980[here]). Running this command will start the Puma server that is
-listening on http://localhost:3000. The default credentials for the dev setup are `admin:smartwm`.
+listening on http://localhost:3000. The default credentials for the dev setup are `admin:smartvm`.
 
 === Data Flow
 Managers are responsible to feed the data into MiQ DB during the refresh operation. In the MiQ terminology it's
@@ -180,7 +180,7 @@ to `http://localhost:3000/middleware_server/show/26` the method `show` in the `m
 and the `middleware_server` entity with id `26` will be accessible in the `@record` variable. After further processing like
 (setting the `@display`) the data will be rendered using those corresponding HAML template files. For the described example,
 this link:https://github.com/ManageIQ/manageiq-ui-classic/blob/036735fcd678430376402f7d81f7d0d7e5c69e5b/app/views/middleware_server/show.html.haml[file] will be used.
-Again, the naming is absolutely crucial here, because everything should automagically work when preserving those conventions.
+Again, the naming is absolutely crucial here, because everything should auto-magically work when preserving those conventions.
 
 === Gluing Everything Together
 Unfortunately, there is no easy way here. Due to some legacy code, often, it is necessary to add the entity
@@ -247,10 +247,10 @@ gem 'pry-byebug'
 Then after running `bundle install`, you should be all set. Now, adding the breakpoint means writing `binding.pry` somewhere in the code.
 Once the ruby executes the code with this line, it stops the execution and opens a REPL where Ruby code can be inspected and executed.
 
-TIP: This works also for the HAML files. But instead of using just `binding.pry`, use `- binding.pry` (+ respect the intendation of the file)
+TIP: This works also for the HAML files. But instead of using just `binding.pry`, use `- binding.pry` (+ respect the indentation of the file)
 
 ==== Console
-Other way of degugging is just printing the variables to the console by `puts foo`. Object can have the `.to_s` method that
+Other way of debugging is just printing the variables to the console by `puts foo`. Object can have the `.to_s` method that
 is responsible for printing the object (equivalent to `.toString()` method in Java), if the `.to_s` method is not implemented,
 you can use the in `.inspect` method that provides the info about the object.
 
